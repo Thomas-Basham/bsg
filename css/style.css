@@ -1,0 +1,155 @@
+* {
+  --eggshell: #f4f1deff;
+  --burnt-sienna: #e07a5fff;
+  --delft-blue: #3d405bff;
+  --cambridge-blue: #81b29aff;
+  --sunset: #f2cc8fff;
+  font-family: Helvetica, sans-serif;
+
+}
+
+body,
+html {
+  background-color: var(--eggshell);
+  margin: 0;
+  padding: 0;
+  /* height: 100%;
+  width: 100% */
+}
+
+header {
+  background-color: var(--sunset);
+}
+
+h1 {
+  font-size: 4rem;
+  margin: 0;
+}
+
+h2 {
+  font-size: 3rem;
+  margin: 0;
+
+}
+
+h3 {
+  font-size: 2rem;
+  margin: 0;
+
+}
+
+
+main {
+  min-height: 70vh;
+}
+
+footer {
+  text-align: center;
+  padding-bottom: 2rem;
+}
+
+#start-section {
+  padding-block: 2rem;
+  height: 40vh;
+  background-color: var(--delft-blue);
+  /* padding-inline: 500px */
+}
+
+img {
+  height: 100%;
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.padding-1 {
+  padding: 1rem;
+}
+
+#tips-section {
+  margin-block: 2rem;
+}
+
+#tips-section div {
+  min-height: 25vh;
+  background-color: var(--burnt-sienna);
+  color: var(--eggshell);
+}
+
+#level-status-section {
+
+  width: 50%;
+  margin: 0 auto;
+}
+
+.border-green {
+  border: 2px solid var(--cambridge-blue);
+  border-radius: 3px;
+}
+
+
+.level-status-div span {
+
+  font-size: 40px;
+  padding: 1rem;
+  cursor: pointer;
+
+}
+
+.level-status-div span:hover {
+  background-color: var(--cambridge-blue);
+}
+
+.margin-block-1 {
+  margin-block: 1rem;
+}
+
+.padding-block-1 {
+  padding-block: 1rem;
+}
+
+.level-status-div p {
+  width: 80%;
+  margin: 0 auto;
+  /* height: 100px; */
+}
+
+.container {
+  margin-inline: auto;
+  width: 50%;
+  height: 100%;
+}
+
+li{
+  padding-bottom: 1rem;
+}
+
+button {
+  padding-inline: 20px;
+  padding-block: 8px;
+  border: 1px solid var(--cambridge-blue);
+  border-radius: 5px;
+  background-color: var(--delft-blue);
+  color: var(--cambridge-blue);
+}
+
+button:hover {
+  cursor: pointer;
+  background-color: var(--cambridge-blue);
+  color: var(--delft-blue);
+}
+
+.btn-2 {
+  background-color: var(--cambridge-blue);
+  color: var(--delft-blue);
+
+}
+
+.btn-2:hover {
+  cursor: pointer;
+  background-color: var(--delft-blue);
+  color: var(--cambridge-blue);
+}
