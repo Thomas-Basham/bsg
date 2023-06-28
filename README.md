@@ -1,1 +1,1 @@
-# Bootcamp Hero
+# Boot Camp Survival Guide
