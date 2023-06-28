@@ -3,13 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bootcamp Hero</title>
+    <title>Boot Camp Survival Guide</title>
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
     <header>
       <section class="container flex-between padding-block-1">
-        <h1>Bootcamp Hero</h1>
+        <h1>Boot Camp Survival Guide</h1>
         <p>Hello, <span id="username"></span></p>
       </section>
     </header>
@@ -18,32 +18,26 @@
         <div class="container flex-between">
           <image alt="fun image" src="img/stock-laptop.jpg" />
           <div class="padding-1">
-            <h2>Boot Camp Hero</h2>
+            <h2>Boot Camp Survival Guide</h2>
             <h3 class="margin-block-1">Empowering new developers</h3>
             <div class="flex-between">
-              <button onclick="startQuest()" class="btn-2">START QUEST</button>
-              <button onclick="showTips()">SHOW TIPS</button>
+              <button
+                onclick="startQuest(event)"
+                id="start-button"
+                class="btn-2"
+              >
+                START QUEST
+              </button>
+              <button onclick="showTips(event)">SHOW TIPS</button>
             </div>
           </div>
         </div>
       </section>
 
       <section id="tips-section">
-        <div class="container border-green padding-1">
-          <h2 >level <span id="current-level"> x </span> tips</h2>
-          <ul>
-            <li>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </li>
-            <li>
-              Cursus eget nunc scelerisque viverra mauris in aliquam sem
-              fringilla. Enim nec dui nunc mattis enim ut tellus.
-            </li>
-            <li>
-              Cursus eget nunc scelerisque viverra mauris in aliquam sem
-              fringilla. Enim nec dui nunc mattis enim ut tellus.
-            </li>
+        <div id="tips-container" class="container border-green padding-1">
+          <ul id="current-tips">
+            <li>Complete the current quest to unlock level 1 tips!</li>
           </ul>
         </div>
       </section>
@@ -55,19 +49,34 @@
 
         <div id="level-status-section" class="flex-between">
           <div class="level-status-div">
-            <span class="border-green level-status" id="leve-1-status">❓</span>
+            <span
+              onclick="startQuest(event) "
+              class="border-green level-status"
+              id="leve-1-status"
+              >❓</span
+            >
             <h4>Level 1</h4>
             <p>Pass level 1 test to unlock tips</p>
           </div>
 
           <div class="level-status-div">
-            <span class="border-green level-status" id="leve-2-status">❓</span>
+            <span
+              onclick="startQuest(event)"
+              class="border-green level-status"
+              id="leve-2-status"
+              >❓</span
+            >
             <h4>Level 2</h4>
             <p>Pass level 2 test to unlock tips</p>
           </div>
 
           <div class="level-status-div">
-            <span class="border-green level-status" id="leve-3-status">❓</span>
+            <span
+              onclick="startQuest(event)"
+              class="border-green level-status"
+              id="leve-3-status"
+              >❓</span
+            >
             <h4>Level 3</h4>
             <p>Pass level 3 test to unlock tips</p>
           </div>
