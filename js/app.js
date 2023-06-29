@@ -7,8 +7,7 @@ let state = {
   levelElements: document.querySelectorAll(".level-status"),
   quizQuestions: [
     new QuizQuestion(
-      `
-    What is the correct HTML tag for creating a paragraph?
+      `Question 1: What is the correct HTML tag for creating a paragraph?
     Options:
     A. <p>
     B. <div>
@@ -19,8 +18,7 @@ let state = {
       "That's correct! a <p> is the proper HTML tag to create a paragraph."
     ),
     new QuizQuestion(
-      `
-      Question 2: Which CSS property is used to change the text color of an element?
+      `Question 2: Which CSS property is used to change the text color of an element?
       Options:
       A. background-color
       B. font-family
@@ -40,6 +38,72 @@ let state = {
     `,
       "a",
       "Yes! // this is what a comment looks like in JavaScript"
+    ),
+    new QuizQuestion(
+      `Question 4: Which of the following is not a valid CSS selector?
+      Options:
+      A. .class-name
+      B. #id-name
+      C. *element-name
+      D. $name
+    `,
+      "d",
+      "That's correct. .class-name, #id-name, and *element-name are all valid CSS selectors"
+    ),
+    new QuizQuestion(
+      `Question 5: What is the purpose of the "if" statement in programming?
+      Options:
+      A. To loop over a block of code multiple times.
+      B. To declare and initialize variables.
+      C. To make decisions based on conditions.
+      D. To define functions.
+    `,
+      "c",
+      'Right! "if" statements are used to make decisions based on conditions.'
+    ),
+    new QuizQuestion(
+      `Question 6: What does CSS stand for?
+      Options:
+      A. Cascading Style Sheet
+      B. Computer Style Sheet
+      C. Creative Style Sheet
+      D. Colorful Style Sheet
+    `,
+      "a",
+      "Correct. CSS stands for Cascading Style Sheet."
+    ),
+    new QuizQuestion(
+      `Question 7: What does the acronym "HTTP" stand for?
+      Options:
+      A. HyperText Markup Protocol
+      B. HyperTransfer Markup Protocol
+      C. Hypertext Transfer Protocol
+      D. High-Throughput Markup Protocol  
+    `,
+      "a",
+      "That's right. HTTP stands for HyperText Markup Protocol."
+    ),
+    new QuizQuestion(
+      `Question 8: What is the purpose of a function in programming?
+      Options:
+      A. To store data temporarily.
+      B. To display output on the console.
+      C. To perform a specific task or calculation.
+      D. To import external libraries.
+    `,
+      "c",
+      "That's right. HTTP stands for HyperText Markup Protocol."
+    ),
+    new QuizQuestion(
+      `Question 9: What is the correct syntax for declaring a variable in JavaScript?
+      Options:
+      A. variable x;
+      B. x = 5;
+      C. x := 5;
+      D. let x = 5;
+    `,
+      "d",
+      "Yep! Let is one way to declare a variable in JavaScript."
     ),
   ],
   tips: [
