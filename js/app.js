@@ -1,9 +1,9 @@
 "use strict";
 
 let state = {
-  username: prompt("Greetings! What is your name?"),
-  currentLevel: 0,
+  username: getUsername(),
   userScore: 0,
+  currentLevel: 1,
   levelElements: document.querySelectorAll(".level-status"),
   quizQuestions: [
     new QuizQuestion(
@@ -73,6 +73,15 @@ let state = {
   ],
 };
 
+function getUsername() {
+  let localStorageUsername = localStorage.getItem("username");
+  if (localStorageUsername === null) {
+    let username = prompt("Greetings! What is your name?");
+    setLocalStorageUsername(username);
+    return username;
+  } else return localStorageUsername;
+}
+
 document.getElementById("username").textContent = state.username;
 
 function QuizQuestion(question, correctAnswer, successMessage) {
@@ -88,10 +97,12 @@ QuizQuestion.prototype.askQuestion = function () {
 
     if (userAnswer === this.correctAnswer) {
       alert(this.successMessage);
-      setTrophies();
       state.userScore += 1;
+      setTrophies();
+      setLocalStorageUserScore();
       if (state.userScore % 3 === 0) {
         state.currentLevel += 1;
+        setLocalStorageUserScore();
       }
     } else {
       alert("Incorrect!");
@@ -108,12 +119,16 @@ function startQuest(event) {
     state.quizQuestions[state.userScore].askQuestion();
   }
 
-  if (state.currentLevel >= 1) {
+  setTipsAndTrophies();
+}
+
+function setTips() {
+  if (state.currentLevel > 1) {
     document.getElementById("current-tips").innerHTML == "";
   }
 
   let tipsContainer = document.getElementById("tips-container");
-  for (let i = state.currentLevel; i < state.currentLevel + 1; i++) {
+  for (let i = state.currentLevel - 1; i < state.currentLevel; i++) {
     let levelHeading = document.createElement("h2");
     levelHeading.textContent = `Level ${state.currentLevel} tips`;
     tipsContainer.appendChild(levelHeading);
@@ -125,7 +140,32 @@ function startQuest(event) {
 }
 
 function setTrophies() {
-  for (let i = 0; i < state.currentLevel + 1; i++) {
+  for (let i = 0; i < state.currentLevel; i++) {
     state.levelElements[i].textContent = "🏆";
   }
 }
+
+function setLocalStorageUserScore() {
+  localStorage.setItem("userScore", state.userScore.toString());
+  localStorage.setItem("currentLevel", state.currentLevel.toString());
+}
+
+function setLocalStorageUsername(username) {
+  localStorage.setItem("username", username);
+}
+
+function getLocalStorage() {
+  state.userScore = parseInt(localStorage.getItem("userScore")) || 0;
+  state.currentLevel = parseInt(localStorage.getItem("currentLevel")) || 0;
+  state.username = localStorage.getItem("username") || null;
+  setTips();
+  setTrophies();
+}
+
+function handleOnPageLoad() {
+  getLocalStorage();
+  if (state.currentLevel > 0) {
+    document.getElementById("start-button").textContent = "CONTINUE QUEST";
+  }
+}
+document.onload = handleOnPageLoad();
