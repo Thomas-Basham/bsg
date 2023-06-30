@@ -13,7 +13,7 @@ The Boot Camp Survival Guide is an interactive web application designed to help 
 
 ### Lighthouse Accessibility Report Score
 
-![Lighthouse Accessibility Report Score](path-to-screenshot)
+![Lighthouse Accessibility Report Score](img/lighthouse-screenshot.png)
 
 ### Reflections and Comments
 
