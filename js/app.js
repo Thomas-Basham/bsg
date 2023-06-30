@@ -5,6 +5,8 @@ let state = {
   userScore: 0,
   currentLevel: 1,
   levelElements: document.querySelectorAll(".level-status"),
+  startButton: document.getElementById("start-button"),
+  tipsContainer: document.getElementById("tips-container"),
   quizQuestions: [
     new QuizQuestion(
       `Question 1: What is the correct HTML tag for creating a paragraph?
@@ -15,7 +17,7 @@ let state = {
     D. <a>
     `,
       "a",
-      "That's correct! a <p> is the proper HTML tag to create a paragraph."
+      "That's correct! <p> is the proper HTML tag to create a paragraph."
     ),
     new QuizQuestion(
       `Question 2: Which CSS property is used to change the text color of an element?
@@ -80,8 +82,8 @@ let state = {
       C. Hypertext Transfer Protocol
       D. High-Throughput Markup Protocol  
     `,
-      "a",
-      "That's right. HTTP stands for HyperText Markup Protocol."
+      "c",
+      "That's right. HTTP stands for Hypertext Transfer Protocol."
     ),
     new QuizQuestion(
       `Question 8: What is the purpose of a function in programming?
@@ -92,18 +94,18 @@ let state = {
       D. To import external libraries.
     `,
       "c",
-      "That's right. HTTP stands for HyperText Markup Protocol."
+      "That's right. Functions are used to perform a specific task or calculation."
     ),
     new QuizQuestion(
       `Question 9: What is the correct syntax for declaring a variable in JavaScript?
       Options:
-      A. variable x;
-      B. x = 5;
-      C. x := 5;
-      D. let x = 5;
+      A. variable x
+      B. x = 5
+      C. x := 5
+      D. let x = 5
     `,
       "d",
-      "Yep! Let is one way to declare a variable in JavaScript."
+      "Yep! 'let' is one way to declare a variable in JavaScript."
     ),
   ],
   tips: [
@@ -131,9 +133,10 @@ let state = {
   Practice Regularly: Consistent practice is key to mastering coding concepts. Set aside dedicated time each day to practice coding exercises, work on projects, and reinforce your learning. Regular practice will help solidify your understanding and build your skills.
   </li>
   <li>
-  Build a Portfolio: As you complete projects during the bootcamp, create a portfolio to showcase your work. A portfolio demonstrates your skills and provides tangible evidence of your abilities to potential employers. Share your portfolio with others and seek feedback to continuously improve.
+  Build a Portfolio: As you complete projects during the bootcamp, create a portfolio to showcase your work. A portfolio demonstrates your skills and provides tangible evidence of your abilities to potential employers. Share your portfolio with others and seek feedback to continuously improve.</li>
   <li>
-  Take Care of Yourself: Lastly, remember to take care of your physical and mental well-being. Coding bootcamps can be intense, so prioritize self-care, get enough rest, maintain a balanced lifestyle, and seek support if you feel overwhelmed.`,
+  Take Care of Yourself: Lastly, remember to take care of your physical and mental well-being. Coding bootcamps can be intense, so prioritize self-care, get enough rest, maintain a balanced lifestyle, and seek support if you feel overwhelmed.</li>
+  `,
   ],
 };
 
@@ -162,19 +165,22 @@ QuizQuestion.prototype.askQuestion = function () {
     if (userAnswer === this.correctAnswer) {
       alert(this.successMessage);
       state.userScore += 1;
-      setTrophies();
       setLocalStorageUserScore();
       if (state.userScore % 3 === 0) {
         state.currentLevel += 1;
+        setTips();
         setLocalStorageUserScore();
       }
+      if (state.userScore === 9) {
+        restartQuest();
+      }
+      setTrophies();
     } else {
       alert("Incorrect!");
     }
   }
 };
 
-/* eslint-disable */
 function startQuest(event) {
   event.preventDefault();
   document.getElementById("start-button").textContent = "CONTINUE QUEST";
@@ -183,29 +189,40 @@ function startQuest(event) {
     state.quizQuestions[state.userScore].askQuestion();
   }
 
-  setTipsAndTrophies();
+  setTips();
+  setTrophies();
 }
 
 function setTips() {
   if (state.currentLevel > 1) {
-    document.getElementById("current-tips").innerHTML == "";
-  }
+    state.tipsContainer.innerHTML = "";
+    for (let i = 0; i < state.currentLevel - 1 && i < 3; i++) {
+      let levelHeading = document.createElement("h2");
+      levelHeading.textContent = `Level ${i + 1} tips`;
+      state.tipsContainer.appendChild(levelHeading);
 
-  let tipsContainer = document.getElementById("tips-container");
-  for (let i = state.currentLevel - 1; i < state.currentLevel; i++) {
-    let levelHeading = document.createElement("h2");
-    levelHeading.textContent = `Level ${state.currentLevel} tips`;
-    tipsContainer.appendChild(levelHeading);
-
-    let tipsUL = document.createElement("ul");
-    tipsUL.innerHTML += state.tips[state.currentLevel - 1]; // minus one for accessing array
-    tipsContainer.appendChild(tipsUL);
+      let tipsUL = document.createElement("ul");
+      tipsUL.innerHTML = state.tips[i];
+      state.tipsContainer.appendChild(tipsUL);
+    }
+  } else {
+    resetTips();
   }
 }
 
+function resetTips() {
+  state.tipsContainer.innerHTML =
+    "<h3>Complete the current quest to unlock Level 1 tips!</h3>";
+}
 function setTrophies() {
-  for (let i = 0; i < state.currentLevel; i++) {
+  for (let i = 0; i < state.currentLevel - 1 && i < 4; i++) {
     state.levelElements[i].textContent = "🏆";
+  }
+}
+
+function resetTrophies() {
+  for (let i = 0; i < state.levelElements.length; i++) {
+    state.levelElements[i].textContent = "❓";
   }
 }
 
@@ -220,16 +237,42 @@ function setLocalStorageUsername(username) {
 
 function getLocalStorage() {
   state.userScore = parseInt(localStorage.getItem("userScore")) || 0;
-  state.currentLevel = parseInt(localStorage.getItem("currentLevel")) || 0;
+  state.currentLevel = parseInt(localStorage.getItem("currentLevel")) || 1;
   state.username = localStorage.getItem("username") || null;
   setTips();
   setTrophies();
 }
 
+function restartQuest() {
+  state.startButton.textContent = "RESTART QUEST";
+  state.startButton.onclick = function (event) {
+    state.currentLevel = 1;
+    state.userScore = 0;
+    resetTrophies();
+    resetTips();
+    setLocalStorageUserScore();
+    event.target.textContent = "START QUEST";
+    event.target.onclick = startQuest;
+  };
+}
+
 function handleOnPageLoad() {
   getLocalStorage();
-  if (state.currentLevel > 0) {
-    document.getElementById("start-button").textContent = "CONTINUE QUEST";
+  if (state.currentLevel > 1) {
+    state.startButton.textContent = "CONTINUE QUEST";
+    if (state.userScore === 9) {
+      restartQuest();
+    }
   }
 }
-document.onload = handleOnPageLoad();
+
+function handleShowTips() {
+  state.currentLevel = 4;
+  setTips();
+}
+
+document
+  .getElementById("show-tips-btn")
+  .addEventListener("click", handleShowTips);
+
+window.onload = handleOnPageLoad;
