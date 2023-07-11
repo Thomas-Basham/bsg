@@ -229,7 +229,7 @@ function resetTrophies() {
 // check local storage for username. if not there, prompt user for name
 function getUsername() {
   let localStorageUsername = localStorage.getItem("username");
-  if (localStorageUsername === null) {
+  if (localStorageUsername === null || localStorageUsername === "") {
     let username = prompt("Greetings! What is your name?");
     setLocalStorageUsername(username);
     return username;
