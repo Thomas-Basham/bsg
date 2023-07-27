@@ -122,20 +122,25 @@ let state = {
   `,
     `
   <li>
-  Collaborate and Network: Take advantage of the collaborative environment in your bootcamp. Engage with your peers, form study groups, and participate in coding challenges together. Building a network of fellow learners can provide support, motivation, and opportunities for collaboration in the future.</li>
+  Collaborate and Network: Take advantage of the collaborative environment in your bootcamp. Engage with your peers, form study groups, and participate in coding challenges together. Building a network of fellow learners can provide support, motivation, and opportunities for collaboration in the future.
+  </li>
   <li>
-  Embrace the Learning Curve: Coding can be challenging, and it's normal to face difficulties along the way. Embrace the learning curve and view challenges as opportunities for growth. Stay persistent, be patient with yourself, and celebrate small victories as you progress.</li>
-  <li>
-  Stay Curious and Continuously Learn: The field of software development is constantly evolving. Cultivate a mindset of curiosity and a passion for learning. Stay updated with industry trends, explore new technologies, and continue expanding your knowledge even after the bootcamp ends.</li>
-  `,
-    `
+  Embrace the Learning Curve: Coding can be challenging, and it's normal to face difficulties along the way. Embrace the learning curve and view challenges as opportunities for growth. Stay persistent, be patient with yourself, and celebrate small victories as you progress.
+  </li>
   <li>
   Practice Regularly: Consistent practice is key to mastering coding concepts. Set aside dedicated time each day to practice coding exercises, work on projects, and reinforce your learning. Regular practice will help solidify your understanding and build your skills.
   </li>
+  `,
+    `
   <li>
-  Build a Portfolio: As you complete projects during the bootcamp, create a portfolio to showcase your work. A portfolio demonstrates your skills and provides tangible evidence of your abilities to potential employers. Share your portfolio with others and seek feedback to continuously improve.</li>
+  Stay Curious and Continuously Learn: The field of software development is constantly evolving. Cultivate a mindset of curiosity and a passion for learning. Stay updated with industry trends, explore new technologies, and continue expanding your knowledge even after the bootcamp ends.
+  </li>
   <li>
-  Take Care of Yourself: Lastly, remember to take care of your physical and mental well-being. Coding bootcamps can be intense, so prioritize self-care, get enough rest, maintain a balanced lifestyle, and seek support if you feel overwhelmed.</li>
+  Build a Portfolio: As you complete projects during the bootcamp, create a portfolio to showcase your work. A portfolio demonstrates your skills and provides tangible evidence of your abilities to potential employers. Share your portfolio with others and seek feedback to continuously improve.
+  </li>
+  <li>
+  Take Care of Yourself: Lastly, remember to take care of your physical and mental well-being. Coding bootcamps can be intense, so prioritize self-care, get enough rest, maintain a balanced lifestyle, and seek support if you feel overwhelmed.
+  </li>
   `,
   ],
 };
@@ -164,7 +169,7 @@ QuizQuestion.prototype.askQuestion = function () {
         setLocalStorageUserScore();
       }
       if (state.userScore === 9) {
-        restartQuest();
+        showRestartQuestButton();
       }
       setTrophies();
     } else {
@@ -203,6 +208,7 @@ function resetTips() {
 function setTrophies() {
   for (let i = 0; i < state.currentLevel - 1 && i < 4; i++) {
     state.levelElements[i].querySelector("span").textContent = "🏆";
+    state.levelElements[i].querySelector("span").onclick = null;
     state.levelElements[i].querySelector("p").textContent = "";
   }
 }
@@ -221,7 +227,7 @@ function handleOnPageLoad() {
   if (state.currentLevel > 1) {
     state.startButton.textContent = "CONTINUE QUEST";
     if (state.userScore === 9) {
-      restartQuest();
+      showRestartQuestButton();
     }
   }
   // add handleShowTips() handler to the show tips button
@@ -232,26 +238,12 @@ function handleOnPageLoad() {
   // set the username element
   document.getElementById("username").textContent = state.username;
 }
+window.onload = handleOnPageLoad;
 
-// event handler so the user can bypass the game and just see the tips
+// click event handler so the user can bypass the game and just see the tips
 function handleShowTips() {
   state.currentLevel = 4;
   setTips();
-}
-
-// updates the start button text and changes the onclick handler to reset everything
-// to the initial app state except the username
-function restartQuest() {
-  state.startButton.textContent = "RESTART QUEST";
-  state.startButton.onclick = function (event) {
-    state.currentLevel = 1;
-    state.userScore = 0;
-    resetTrophies();
-    resetTips();
-    setLocalStorageUserScore();
-    event.target.textContent = "START QUEST";
-    event.target.onclick = startQuest;
-  };
 }
 
 // click event on start button. loops through 3 quiz question objects and
@@ -267,6 +259,22 @@ function startQuest(event) {
   setTips();
   setTrophies();
 }
+
+// updates the start button text and changes the onclick handler to reset everything
+// to the initial app state except the username
+function showRestartQuestButton() {
+  state.startButton.textContent = "RESTART QUEST";
+  state.startButton.onclick = function (event) {
+    state.currentLevel = 1;
+    state.userScore = 0;
+    resetTrophies();
+    resetTips();
+    setLocalStorageUserScore();
+    event.target.textContent = "START QUEST";
+    event.target.onclick = startQuest;
+  };
+}
+
 // *********************** LOCAL STORAGE ***********************
 // check local storage for username. if not there, prompt user for name
 function getUsername() {
@@ -296,4 +304,3 @@ function getLocalStorage() {
   setTrophies();
 }
 
-window.onload = handleOnPageLoad;
