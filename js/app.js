@@ -244,7 +244,8 @@ function handleOnPageLoad() {
 window.onload = handleOnPageLoad;
 
 // click event handler so the user can bypass the game and just see the tips
-function handleShowAllTips() {
+function handleShowAllTips(event) {
+  event.preventDefault();
   state.tipsContainer.innerHTML = "";
   for (let i = 0; i < 3; i++) {
     let levelHeading = document.createElement("h2");
@@ -316,4 +317,3 @@ function getLocalStorage() {
   setTips();
   setTrophies();
 }
-
