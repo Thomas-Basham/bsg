@@ -10,6 +10,9 @@ The Boot Camp Survival Guide is an interactive web application designed to help 
 - [Local Storage](https://www.w3schools.com/jsref/prop_win_localstorage.asp)
 - [DOM Manipulation](https://www.w3schools.com/js/js_htmldom_elements.asp)
 - [OpenAI GPT-3](https://openai.com/)
+- [Prompt for getting quiz Questions](https://chat.openai.com/share/ac6d1181-f867-4a34-8b19-a29f9cd14102)
+
+![Wire-frame](img/wire-frame.png)
 
 ### Lighthouse Accessibility Report Score
 
@@ -17,4 +20,4 @@ The Boot Camp Survival Guide is an interactive web application designed to help 
 
 ### Reflections and Comments
 
-I used this project to reinforce the tools and concepts that will be used when teaching a class at Codex Academy. As a final project, the students are challenged to build an app using HTMl, CSS, and JavaScript. Some requirements for the project are that they use local storage to persist data across screen refresh and that the pages contain dynamic data that changes based on user input. Some challenges I had was not using advanced that is not in the curriculum for this particular class. The goal was to emulate the skills of a well performing student, and not exceeding that.
+I used this project to reinforce the tools and concepts that will be used when teaching a class at Codex Academy. As a final project, the students are challenged to build an app using HTMl, CSS, and JavaScript. Some requirements for the project are that they use local storage to persist data across screen refresh and that the pages contain dynamic data that changes based on user input. Some challenges I had was not using advanced concepts that are not in the curriculum for this particular class. My goal was to emulate the skills of a well performing student, and not exceeding that.
