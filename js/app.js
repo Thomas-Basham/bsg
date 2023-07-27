@@ -182,7 +182,7 @@ QuizQuestion.prototype.askQuestion = function () {
 };
 
 // *********************** DOM MANIPULATION ***********************
-// If the current level is greater than 1, render tips on screen,
+// If the current level is greater than 1, render current tips on screen,
 // else reset the tips to initial state
 function setTips() {
   if (state.currentLevel > 1) {
@@ -201,13 +201,13 @@ function setTips() {
   }
 }
 
-// reset tips to initial app state
+// helper function to reset tips to initial app state
 function resetTips() {
   state.tipsContainer.innerHTML =
     "<h3>Complete the current quest to unlock Level 1 tips!</h3>";
 }
 
-// render the trophy emoji on the screen for each level that's complete
+// helper function to render the 🏆 on the screen for each level that's complete
 function setTrophies() {
   for (let i = 0; i < state.currentLevel - 1 && i < 4; i++) {
     state.levelElements[i].querySelector("span").textContent = "🏆";
@@ -216,7 +216,7 @@ function setTrophies() {
   }
 }
 
-// reset trophies to initial app state
+// helper function to reset trophies to initial app state
 function resetTrophies() {
   for (let i = 0; i < state.levelElements.length; i++) {
     state.levelElements[i].textContent = "❓";
@@ -233,10 +233,10 @@ function handleOnPageLoad() {
       showRestartQuestButton();
     }
   }
-  // add handleShowTips() handler to the show tips button
+  // add handleShowAllTips() handler to the show tips button
   document
     .getElementById("show-tips-btn")
-    .addEventListener("click", handleShowTips);
+    .addEventListener("click", handleShowAllTips);
 
   // set the username element
   document.getElementById("username").textContent = state.username;
@@ -244,15 +244,24 @@ function handleOnPageLoad() {
 window.onload = handleOnPageLoad;
 
 // click event handler so the user can bypass the game and just see the tips
-function handleShowTips() {
-  state.currentLevel = 4;
-  setTips();
+function handleShowAllTips() {
+  state.tipsContainer.innerHTML = "";
+  for (let i = 0; i < 3; i++) {
+    let levelHeading = document.createElement("h2");
+    levelHeading.textContent = `Level ${i + 1} tips`;
+    state.tipsContainer.appendChild(levelHeading);
+
+    let tipsUL = document.createElement("ul");
+    tipsUL.innerHTML = state.tips[i];
+    state.tipsContainer.appendChild(tipsUL);
+  }
 }
 
 // click event on start button. loops through 3 quiz question objects and
 // calls the askQuestion() prototype function
 function startQuest(event) {
   event.preventDefault();
+  resetTips();
   document.getElementById("start-button").textContent = "CONTINUE QUEST";
 
   for (let i = 0; i < 3; i++) {
@@ -267,6 +276,7 @@ function startQuest(event) {
 // to the initial app state except the username
 function showRestartQuestButton() {
   state.startButton.textContent = "RESTART QUEST";
+
   state.startButton.onclick = function (event) {
     state.currentLevel = 1;
     state.userScore = 0;
