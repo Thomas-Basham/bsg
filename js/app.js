@@ -4,7 +4,7 @@ let state = {
   username: getUsername(),
   userScore: 0,
   currentLevel: 1,
-  levelElements: document.querySelectorAll(".level-status"),
+  levelElements: document.querySelectorAll(".level-status-div"),
   startButton: document.getElementById("start-button"),
   tipsContainer: document.getElementById("tips-container"),
   quizQuestions: [
@@ -139,7 +139,7 @@ let state = {
   `,
   ],
 };
-
+// *********************** CONSTRUCTOR ***********************
 // Constructor for a quiz question object
 function QuizQuestion(question, correctAnswer, successMessage) {
   this.question = question;
@@ -173,20 +173,7 @@ QuizQuestion.prototype.askQuestion = function () {
   }
 };
 
-// click event on start button. loops through 3 quiz question objects and
-// calls the askQuestion prototype function
-function startQuest(event) {
-  event.preventDefault();
-  document.getElementById("start-button").textContent = "CONTINUE QUEST";
-
-  for (let i = 0; i < 3; i++) {
-    state.quizQuestions[state.userScore].askQuestion();
-  }
-
-  setTips();
-  setTrophies();
-}
-
+// *********************** DOM MANIPULATION ***********************
 // If the current level is greater than 1, render tips on screen,
 // else reset the tips to initial state
 function setTips() {
@@ -215,7 +202,8 @@ function resetTips() {
 // render the trophy emoji on the screen for each level that's complete
 function setTrophies() {
   for (let i = 0; i < state.currentLevel - 1 && i < 4; i++) {
-    state.levelElements[i].textContent = "🏆";
+    state.levelElements[i].querySelector("span").textContent = "🏆";
+    state.levelElements[i].querySelector("p").textContent = "";
   }
 }
 
@@ -226,6 +214,60 @@ function resetTrophies() {
   }
 }
 
+// *********************** EVENT HANDLING ***********************
+// when the page loads, get the local storage data and update the start button text content
+function handleOnPageLoad() {
+  getLocalStorage();
+  if (state.currentLevel > 1) {
+    state.startButton.textContent = "CONTINUE QUEST";
+    if (state.userScore === 9) {
+      restartQuest();
+    }
+  }
+  // add handleShowTips() handler to the show tips button
+  document
+    .getElementById("show-tips-btn")
+    .addEventListener("click", handleShowTips);
+
+  // set the username element
+  document.getElementById("username").textContent = state.username;
+}
+
+// event handler so the user can bypass the game and just see the tips
+function handleShowTips() {
+  state.currentLevel = 4;
+  setTips();
+}
+
+// updates the start button text and changes the onclick handler to reset everything
+// to the initial app state except the username
+function restartQuest() {
+  state.startButton.textContent = "RESTART QUEST";
+  state.startButton.onclick = function (event) {
+    state.currentLevel = 1;
+    state.userScore = 0;
+    resetTrophies();
+    resetTips();
+    setLocalStorageUserScore();
+    event.target.textContent = "START QUEST";
+    event.target.onclick = startQuest;
+  };
+}
+
+// click event on start button. loops through 3 quiz question objects and
+// calls the askQuestion() prototype function
+function startQuest(event) {
+  event.preventDefault();
+  document.getElementById("start-button").textContent = "CONTINUE QUEST";
+
+  for (let i = 0; i < 3; i++) {
+    state.quizQuestions[state.userScore].askQuestion();
+  }
+
+  setTips();
+  setTrophies();
+}
+// *********************** LOCAL STORAGE ***********************
 // check local storage for username. if not there, prompt user for name
 function getUsername() {
   let localStorageUsername = localStorage.getItem("username");
@@ -254,44 +296,4 @@ function getLocalStorage() {
   setTrophies();
 }
 
-// updates the start button text and changes the onclick handler to reset everything
-// to the initial app state except the username
-function restartQuest() {
-  state.startButton.textContent = "RESTART QUEST";
-  state.startButton.onclick = function (event) {
-    state.currentLevel = 1;
-    state.userScore = 0;
-    resetTrophies();
-    resetTips();
-    setLocalStorageUserScore();
-    event.target.textContent = "START QUEST";
-    event.target.onclick = startQuest;
-  };
-}
-
-// when the page loads, get the local storage data and update the start button text content
-function handleOnPageLoad() {
-  getLocalStorage();
-  if (state.currentLevel > 1) {
-    state.startButton.textContent = "CONTINUE QUEST";
-    if (state.userScore === 9) {
-      restartQuest();
-    }
-  }
-}
-
-// event handler so the user can bypass the game and just see the tips
-function handleShowTips() {
-  state.currentLevel = 4;
-  setTips();
-}
-
-// add handleShowTips() to the show tips button
-document
-  .getElementById("show-tips-btn")
-  .addEventListener("click", handleShowTips);
-
 window.onload = handleOnPageLoad;
-
-// set the username element
-document.getElementById("username").textContent = state.username;
