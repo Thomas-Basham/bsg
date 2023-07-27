@@ -1,5 +1,7 @@
 "use strict";
 
+// *********************** GLOBAL STATE ***********************
+// This is lengthy, due to the quiz questions and tip content being stored here
 let state = {
   username: getUsername(),
   userScore: 0,
@@ -144,6 +146,7 @@ let state = {
   `,
   ],
 };
+
 // *********************** CONSTRUCTOR ***********************
 // Constructor for a quiz question object
 function QuizQuestion(question, correctAnswer, successMessage) {
