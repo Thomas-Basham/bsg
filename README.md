@@ -6,6 +6,7 @@ The Boot Camp Survival Guide is an interactive web application designed to help 
 
 ### Links and Resources
 
+- [Review Pull Request](https://github.com/Thomas-Basham/code-201-project/pull/6)
 - [JavaScript Documentation](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 - [Local Storage](https://www.w3schools.com/jsref/prop_win_localstorage.asp)
 - [DOM Manipulation](https://www.w3schools.com/js/js_htmldom_elements.asp)
