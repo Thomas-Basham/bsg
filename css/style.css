@@ -1,11 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Bungee&family=Roboto&display=swap');
 * {
   --eggshell: #f4f1deff;
   --burnt-sienna: #e07a5fff;
-  --delft-blue: #3d405bff;
+  --delft-blue: rgb(61, 64, 91);
   --cambridge-blue: #81b29aff;
   --sunset: #f2cc8fff;
-  font-family: Helvetica, sans-serif;
-  margin: 1px solid red;
+  font-family: 'Roboto', sans-serif;
+  /* border: 1px solid red; */
 }
 
 body,
@@ -13,16 +14,13 @@ html {
   background-color: var(--eggshell);
   margin: 0;
   height: 100%;
-
-}
-
-header {
-  background-color: var(--sunset);
 }
 
 h1 {
-  font-size: 4vw;
+  font-size: 3.7vw;
   margin: 0;
+  font-family: 'Bungee', cursive;
+
 }
 
 h2 {
@@ -33,7 +31,6 @@ h2 {
 h3 {
   font-size: 2vw;
   margin: 0;
-
 }
 
 h4 {
@@ -43,7 +40,13 @@ h4 {
 p,
 li,
 button {
-  font-size: 1.5vw;
+  font-size: 1.3vw;
+}
+
+header {
+  background-color: var(--sunset);
+  padding-inline: 2rem;
+  margin: 2rem;
 }
 
 main {
@@ -66,13 +69,15 @@ li {
 }
 
 button {
-  padding-inline: 20px;
-  padding-block: 8px;
+  padding-inline: 1rem;
+  padding-block: .5rem;
   border: 1px solid var(--cambridge-blue);
   border-radius: 5px;
   background-color: var(--delft-blue);
   color: var(--cambridge-blue);
+
 }
+
 
 button:hover {
   cursor: pointer;
@@ -84,6 +89,11 @@ button:hover {
   padding: 2rem;
   height: fit-content;
   background-color: var(--delft-blue);
+  color: #f2cc8fff;
+}
+
+#start-section button {
+  margin-inline: 2px;
 }
 
 #tips-section {
@@ -148,13 +158,11 @@ button:hover {
   padding-block: 1rem;
 }
 
-
 .container {
   margin: 0 auto;
   /* width: 50%; */
   height: 100%;
 }
-
 
 .btn-2 {
   background-color: var(--cambridge-blue);
