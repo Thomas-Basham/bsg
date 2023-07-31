@@ -9,6 +9,7 @@ let state = {
   levelElements: document.querySelectorAll(".level-status-div"),
   startButton: document.getElementById("start-button"),
   tipsContainer: document.getElementById("tips-container"),
+  showTipsBtn: document.getElementById("show-tips-btn"),
   quizQuestions: [
     new QuizQuestion(
       `Question 1: What is the correct HTML tag for creating a paragraph?
@@ -160,7 +161,13 @@ function QuizQuestion(question, correctAnswer, successMessage) {
 QuizQuestion.prototype.askQuestion = function () {
   let userAnswer;
   while (userAnswer !== this.correctAnswer) {
-    userAnswer = prompt(this.question).toLowerCase();
+    userAnswer = prompt(this.question);
+
+    if (userAnswer !== null) {
+      userAnswer = userAnswer.toLowerCase();
+    } else {
+      break;
+    }
 
     if (userAnswer === this.correctAnswer) {
       alert(this.successMessage);
@@ -176,7 +183,7 @@ QuizQuestion.prototype.askQuestion = function () {
       }
       setTrophies();
     } else {
-      alert("Incorrect!");
+      alert("Incorrect! Please enter one of the letter options, a, b, c, or d");
     }
   }
 };
@@ -234,19 +241,18 @@ function handleOnPageLoad() {
     }
   }
   // add handleShowAllTips() handler to the show tips button
-  document
-    .getElementById("show-tips-btn")
-    .addEventListener("click", handleShowAllTips);
+  state.showTipsBtn.addEventListener("click", handleShowAllTips);
 
   // set the username element
   document.getElementById("username").textContent = state.username;
 }
-window.onload = handleOnPageLoad;
+handleOnPageLoad();
 
 // click event handler so the user can bypass the game and just see the tips
 function handleShowAllTips(event) {
   event.preventDefault();
   state.tipsContainer.innerHTML = "";
+
   for (let i = 0; i < 3; i++) {
     let levelHeading = document.createElement("h2");
     levelHeading.textContent = `Level ${i + 1} tips`;
