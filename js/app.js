@@ -1,126 +1,35 @@
 "use strict";
 
 // *********************** GLOBAL STATE ***********************
-// This is lengthy, due to the quiz questions and tip content being stored here
+// This is lengthy, due to the quiz questions being stored here
 let state = {
   username: getUsername(),
-  userScore: 0,
-  currentLevel: 1,
-  levelElements: document.querySelectorAll(".level-status-div"),
-  startButton: document.getElementById("start-button"),
+
+  game: new Game(),
+  // userScore: 0,
+  // currentLevel: 1,
+  // startButton: document.getElementById("start-button"),
+
+  // levelElements: document.querySelectorAll(".level-status-div"),
+
   tipsContainer: document.getElementById("tips-container"),
   showTipsBtn: document.getElementById("show-tips-btn"),
   zeroLevelTip: document.getElementById("zero-level-tip"),
-  quizQuestions: [
-    new QuizQuestion(
-      `Question 1: What is the correct HTML tag for creating a paragraph?
-    Options:
-    A. <p>
-    B. <div>
-    C. <span>
-    D. <a>
-    `,
-      "a",
-      "That's correct! <p> is the proper HTML tag to create a paragraph."
-    ),
-    new QuizQuestion(
-      `Question 2: Which CSS property is used to change the text color of an element?
-      Options:
-      A. background-color
-      B. font-family
-      C. color
-      D. text-align
-      `,
-      "c",
-      "Bingo! color is the CSS property to change the text color of an element."
-    ),
-    new QuizQuestion(
-      `Question 3: How do you write a comment in JavaScript?
-    Options:
-    A. // This is a comment
-    B. <!-- This is a comment -->
-    C. */ This is a comment /*/
-    D. # This is a comment
-    `,
-      "a",
-      "Yes! // this is what a comment looks like in JavaScript"
-    ),
-    new QuizQuestion(
-      `Question 4: Which of the following is not a valid CSS selector?
-      Options:
-      A. .class-name
-      B. #id-name
-      C. *element-name
-      D. $name
-    `,
-      "d",
-      "That's correct. .class-name, #id-name, and *element-name are all valid CSS selectors"
-    ),
-    new QuizQuestion(
-      `Question 5: What is the purpose of the "if" statement in programming?
-      Options:
-      A. To loop over a block of code multiple times.
-      B. To declare and initialize variables.
-      C. To make decisions based on conditions.
-      D. To define functions.
-    `,
-      "c",
-      'Right! "if" statements are used to make decisions based on conditions.'
-    ),
-    new QuizQuestion(
-      `Question 6: What does CSS stand for?
-      Options:
-      A. Cascading Style Sheet
-      B. Computer Style Sheet
-      C. Creative Style Sheet
-      D. Colorful Style Sheet
-    `,
-      "a",
-      "Correct. CSS stands for Cascading Style Sheet."
-    ),
-    new QuizQuestion(
-      `Question 7: What does the acronym "HTTP" stand for?
-      Options:
-      A. HyperText Markup Protocol
-      B. HyperTransfer Markup Protocol
-      C. Hypertext Transfer Protocol
-      D. High-Throughput Markup Protocol  
-    `,
-      "c",
-      "That's right. HTTP stands for Hypertext Transfer Protocol."
-    ),
-    new QuizQuestion(
-      `Question 8: What is the purpose of a function in programming?
-      Options:
-      A. To store data temporarily.
-      B. To display output on the console.
-      C. To perform a specific task or calculation.
-      D. To import external libraries.
-    `,
-      "c",
-      "That's right. Functions are used to perform a specific task or calculation."
-    ),
-    new QuizQuestion(
-      `Question 9: What is the correct syntax for declaring a variable in JavaScript?
-      Options:
-      A. variable x
-      B. x = 5
-      C. x := 5
-      D. let x = 5
-    `,
-      "d",
-      "Yep! 'let' is one way to declare a variable in JavaScript."
-    ),
-  ],
-  tips: document.querySelectorAll(".tip-ul"),
+  tipElements: document.querySelectorAll(".tip-ul"),
 };
 
 // *********************** CONSTRUCTOR ***********************
 // Constructor for a quiz question object
-function QuizQuestion(question, correctAnswer, successMessage) {
-  this.question = question;
-  this.correctAnswer = correctAnswer;
-  this.successMessage = successMessage;
+function QuizQuestion(
+  question,
+  possibleAnswers,
+  correctAnswer,
+  successMessage
+) {
+  this.question = question; // string
+  this.possibleAnswers = possibleAnswers; // object
+  this.correctAnswer = correctAnswer; // object[A, B, C, or D]
+  this.successMessage = successMessage; // string
 }
 
 // QuizQuestion prototype to quiz the user with prompts and
@@ -148,10 +57,133 @@ QuizQuestion.prototype.askQuestion = function () {
       if (state.userScore === 9) {
         showRestartQuestButton();
       }
-      setTrophies();
+      state.trophies.setTrophies();
     } else {
       alert("Incorrect! Please enter one of the letter options, a, b, c, or d");
     }
+  }
+};
+
+function Game() {
+  this.userScore = 0;
+  this.currentLevel = 1;
+  this.startButton = document.getElementById("start-button");
+  this.trophies = new Trophies();
+  this.quizQuestions = [
+    new QuizQuestion(
+      "Question 1: What is the correct HTML tag for creating a paragraph?",
+      {
+        A: "&lt;p>",
+        B: "&lt;div>",
+        C: "&lt;span>",
+        D: "&lt;a>",
+      },
+      "A",
+      "That's correct! <p> is the proper HTML tag to create a paragraph."
+    ),
+    new QuizQuestion(
+      "Question 2: Which CSS property is used to change the text color of an element?",
+      {
+        A: "background-color",
+        B: "font-family",
+        C: "color",
+        D: "text-align",
+      },
+      "C",
+      "Bingo! color is the CSS property to change the text color of an element."
+    ),
+    new QuizQuestion(
+      "Question 3: How do you write a comment in JavaScript?",
+      {
+        A: "// This is a comment",
+        B: "<!-- This is a comment -->",
+        C: "*/ This is a comment /*/",
+        D: "# This is a comment",
+      },
+
+      "A",
+      "Yes! // this is what a comment looks like in JavaScript"
+    ),
+    new QuizQuestion(
+      "Question 4: Which of the following is not a valid CSS selector?",
+      {
+        A: ".class-name",
+        B: "#id-name",
+        C: "*element-name",
+        D: "$name",
+      },
+      "D",
+      "That's right. .class-name, #id-name, and *element-name are all valid CSS selectors"
+    ),
+    new QuizQuestion(
+      'Question 5: What is the purpose of the "if" statement in programming?',
+      {
+        A: "To loop over a block of code multiple times.",
+        B: "To declare and initialize variables.",
+        C: "To make decisions based on conditions.",
+        D: "To define functions.",
+      },
+      "C",
+      'Right! "if" statements are used to make decisions based on conditions.'
+    ),
+    new QuizQuestion(
+      `Question 6: What does CSS stand for?`,
+      "A",
+      "Correct. CSS stands for Cascading Style Sheet."
+    ),
+    new QuizQuestion(
+      `Question 7: What does the acronym "HTTP" stand for?`,
+      {
+        A: "HyperText Markup Protocol",
+        B: "HyperTransfer Markup Protocol",
+        C: "Hypertext Transfer Protocol",
+        D: "High-Throughput Markup Protocol",
+      },
+      "C",
+      "That's right. HTTP stands for Hypertext Transfer Protocol."
+    ),
+    new QuizQuestion(
+      "Question 8: What is the purpose of a function in programming?",
+      {
+        A: "To store data temporarily.",
+        B: "To display output on the console.",
+        C: "To perform a specific task or calculation.",
+        D: "To import external libraries.",
+      },
+      "C",
+      "That's right. Functions are used to perform a specific task or calculation."
+    ),
+    new QuizQuestion(
+      "Question 9: What is the correct syntax for declaring a variable in JavaScript?",
+      {
+        A: "variable x",
+        B: "x = 5",
+        C: "x := 5",
+        D: "let x = 5",
+      },
+      "D",
+      "Yep! 'let' is one way to declare a variable in JavaScript."
+    ),
+  ];
+}
+Game.prototype.getScore = function () {
+  this.userScore = parseInt(localStorage.getItem("userScore")) || 0;
+  this.currentLevel = parseInt(localStorage.getItem("currentLevel")) || 1;
+};
+
+function Trophies() {
+  this.levelElements = document.querySelectorAll(".level-status-div");
+}
+Trophies.prototype.setTrophies = function setTrophies() {
+  for (let i = 0; i < state.game.currentLevel - 1 && i < 4; i++) {
+    this.levelElements[i].querySelector("span").onclick = null;
+    this.levelElements[i].querySelector("span").textContent = "🏆";
+    this.levelElements[i].querySelector("p").textContent = "";
+  }
+};
+Trophies.prototype.resetTrophies = function () {
+  for (let i = 0; i < this.levelElements.length; i++) {
+    state.levelElements[i].textContent = "❓";
   }
 };
 
@@ -162,7 +194,7 @@ function setTips() {
   if (state.currentLevel > 1) {
     state.zeroLevelTip.style.display = "none";
     for (let i = 0; i < state.currentLevel - 1 && i < 3; i++) {
-      state.tips[i].style.display = "block";
+      state.tipElements[i].style.display = "block";
     }
   } else {
     resetTips();
@@ -173,29 +205,30 @@ function setTips() {
 function resetTips() {
   state.zeroLevelTip.style.display = "block";
   for (let i = 0; i < 3; i++) {
-    state.tips[i].style.display = "none";
+    state.tipElements[i].style.display = "none";
   }
 }
 
 // helper function to render the 🏆 on the screen for each level that's complete
-function setTrophies() {
-  for (let i = 0; i < state.currentLevel - 1 && i < 4; i++) {
-    state.levelElements[i].querySelector("span").textContent = "🏆";
-    state.levelElements[i].querySelector("span").onclick = null;
-    state.levelElements[i].querySelector("p").textContent = "";
-  }
-}
+// function setTrophies() {
+//   for (let i = 0; i < state.currentLevel - 1 && i < 4; i++) {
+//     state.levelElements[i].querySelector("span").textContent = "🏆";
+//     state.levelElements[i].querySelector("span").onclick = null;
+//     state.levelElements[i].querySelector("p").textContent = "";
+//   }
+// }
 
 // helper function to reset trophies to initial app state
-function resetTrophies() {
-  for (let i = 0; i < state.levelElements.length; i++) {
-    state.levelElements[i].textContent = "❓";
-  }
-}
+// function resetTrophies() {
+//   for (let i = 0; i < state.levelElements.length; i++) {
+//     state.levelElements[i].textContent = "❓";
+//   }
+// }
 
 // *********************** EVENT HANDLING ***********************
 // when the page loads, get the local storage data and update the start button text content
 function handleOnPageLoad() {
+  state.game.getScore();
   getLocalStorage();
   if (state.currentLevel > 1) {
     state.startButton.textContent = "CONTINUE QUEST";
@@ -222,7 +255,7 @@ function handleShowAllTips(event) {
     state.tipsContainer.appendChild(levelHeading);
 
     let tipsUL = document.createElement("ul");
-    tipsUL.innerHTML = state.tips[i];
+    tipsUL.innerHTML = state.tipElements[i];
     state.tipsContainer.appendChild(tipsUL);
   }
 }
@@ -231,15 +264,11 @@ function handleShowAllTips(event) {
 // calls the askQuestion() prototype function
 function startQuest(event) {
   event.preventDefault();
-  // resetTips();
   document.getElementById("start-button").textContent = "CONTINUE QUEST";
 
   for (let i = 0; i < 3; i++) {
     state.quizQuestions[state.userScore].askQuestion();
   }
-
-  // setTips();
-  // setTrophies();
 }
 
 // updates the start button text and changes the onclick handler to reset everything
@@ -252,7 +281,7 @@ function showRestartQuestButton() {
     state.userScore = 0;
     setLocalStorageUserScore();
     resetTips();
-    resetTrophies();
+    state.trophies.resetTrophies();
     event.target.textContent = "START QUEST";
     event.target.onclick = startQuest;
   };
@@ -280,9 +309,9 @@ function setLocalStorageUsername(username) {
 
 // gets the local storage and updates the tips and trophies
 function getLocalStorage() {
-  state.userScore = parseInt(localStorage.getItem("userScore")) || 0;
-  state.currentLevel = parseInt(localStorage.getItem("currentLevel")) || 1;
-  state.username = localStorage.getItem("username") || null;
+  // state.userScore = parseInt(localStorage.getItem("userScore")) || 0;
+  // state.currentLevel = parseInt(localStorage.getItem("currentLevel")) || 1;
+  // state.username = localStorage.getItem("username") || null;
   setTips();
   setTrophies();
 }
