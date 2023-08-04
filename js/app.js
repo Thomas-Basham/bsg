@@ -10,6 +10,7 @@ let state = {
   startButton: document.getElementById("start-button"),
   tipsContainer: document.getElementById("tips-container"),
   showTipsBtn: document.getElementById("show-tips-btn"),
+  zeroLevelTip: document.getElementById("zero-level-tip"),
   quizQuestions: [
     new QuizQuestion(
       `Question 1: What is the correct HTML tag for creating a paragraph?
@@ -111,41 +112,7 @@ let state = {
       "Yep! 'let' is one way to declare a variable in JavaScript."
     ),
   ],
-  tips: [
-    `
-  <li>
-  Stay Engaged and Motivated: Coding bootcamps can be intense and fast-paced. Stay engaged by actively participating in lectures, asking questions, and taking notes. Maintain your motivation by reminding yourself of your goals and the exciting opportunities that lie ahead.
-  </li>
-  <li>
-  Seek Help When Needed: Don't hesitate to ask for help when you encounter challenges or have doubts. Bootcamps often have teaching assistants or mentors who can assist you. Reach out to them, engage in discussions, and leverage their expertise to overcome obstacles and gain a deeper understanding of concepts.
-  </li>
-  <li>
-  Read Documentation and Explore Resources: Learning to navigate documentation is crucial for software development. Get comfortable reading documentation for programming languages, frameworks, and tools. Additionally, explore online resources, tutorials, and coding communities to expand your knowledge and stay updated with the latest trends.
-  </li>
-  `,
-    `
-  <li>
-  Collaborate and Network: Take advantage of the collaborative environment in your bootcamp. Engage with your peers, form study groups, and participate in coding challenges together. Building a network of fellow learners can provide support, motivation, and opportunities for collaboration in the future.
-  </li>
-  <li>
-  Embrace the Learning Curve: Coding can be challenging, and it's normal to face difficulties along the way. Embrace the learning curve and view challenges as opportunities for growth. Stay persistent, be patient with yourself, and celebrate small victories as you progress.
-  </li>
-  <li>
-  Practice Regularly: Consistent practice is key to mastering coding concepts. Set aside dedicated time each day to practice coding exercises, work on projects, and reinforce your learning. Regular practice will help solidify your understanding and build your skills.
-  </li>
-  `,
-    `
-  <li>
-  Stay Curious and Continuously Learn: The field of software development is constantly evolving. Cultivate a mindset of curiosity and a passion for learning. Stay updated with industry trends, explore new technologies, and continue expanding your knowledge even after the bootcamp ends.
-  </li>
-  <li>
-  Build a Portfolio: As you complete projects during the bootcamp, create a portfolio to showcase your work. A portfolio demonstrates your skills and provides tangible evidence of your abilities to potential employers. Share your portfolio with others and seek feedback to continuously improve.
-  </li>
-  <li>
-  Take Care of Yourself: Lastly, remember to take care of your physical and mental well-being. Coding bootcamps can be intense, so prioritize self-care, get enough rest, maintain a balanced lifestyle, and seek support if you feel overwhelmed.
-  </li>
-  `,
-  ],
+  tips: document.querySelectorAll(".tip-ul"),
 };
 
 // *********************** CONSTRUCTOR ***********************
@@ -193,15 +160,9 @@ QuizQuestion.prototype.askQuestion = function () {
 // else reset the tips to initial state
 function setTips() {
   if (state.currentLevel > 1) {
-    state.tipsContainer.innerHTML = "";
+    state.zeroLevelTip.style.display = "none";
     for (let i = 0; i < state.currentLevel - 1 && i < 3; i++) {
-      let levelHeading = document.createElement("h2");
-      levelHeading.textContent = `Level ${i + 1} tips`;
-      state.tipsContainer.appendChild(levelHeading);
-
-      let tipsUL = document.createElement("ul");
-      tipsUL.innerHTML = state.tips[i];
-      state.tipsContainer.appendChild(tipsUL);
+      state.tips[i].style.display = "block";
     }
   } else {
     resetTips();
@@ -210,8 +171,10 @@ function setTips() {
 
 // helper function to reset tips to initial app state
 function resetTips() {
-  state.tipsContainer.innerHTML =
-    "<h3>Complete the current quest to unlock Level 1 tips!</h3>";
+  state.zeroLevelTip.style.display = "block";
+  for (let i = 0; i < 3; i++) {
+    state.tips[i].style.display = "none";
+  }
 }
 
 // helper function to render the 🏆 on the screen for each level that's complete
@@ -268,15 +231,15 @@ function handleShowAllTips(event) {
 // calls the askQuestion() prototype function
 function startQuest(event) {
   event.preventDefault();
-  resetTips();
+  // resetTips();
   document.getElementById("start-button").textContent = "CONTINUE QUEST";
 
   for (let i = 0; i < 3; i++) {
     state.quizQuestions[state.userScore].askQuestion();
   }
 
-  setTips();
-  setTrophies();
+  // setTips();
+  // setTrophies();
 }
 
 // updates the start button text and changes the onclick handler to reset everything
@@ -287,9 +250,9 @@ function showRestartQuestButton() {
   state.startButton.onclick = function (event) {
     state.currentLevel = 1;
     state.userScore = 0;
-    resetTrophies();
-    resetTips();
     setLocalStorageUserScore();
+    resetTips();
+    resetTrophies();
     event.target.textContent = "START QUEST";
     event.target.onclick = startQuest;
   };
