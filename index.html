@@ -20,6 +20,11 @@
         <h1>Boot Camp Survival Guide</h1>
         <p>Hello, <span id="username"></span></p>
       </section>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="about.html">About This Website</a>
+        <a href="about.html">Another Link</a>
+      </nav>
     </header>
     <main>
       <section id="start-section">
@@ -44,7 +49,9 @@
 
       <section id="tips-section">
         <div id="tips-container" class="container border-green padding-1">
-          <h3 id="zero-level-tip">Complete the current quest to unlock Level 1 tips!</h3>
+          <h3 id="zero-level-tip">
+            Complete the current quest to unlock Level 1 tips!
+          </h3>
           <ul class="tip-ul">
             <h2>Level 1 tips</h2>
             <li>
@@ -161,6 +168,34 @@
         </div>
       </section>
     </footer>
+    <div id="modal">
+      <div class="modal-content">
+        <p>
+          Question 1: What is the correct HTML tag for creating a paragraph?
+        </p>
+        <form>
+          <fieldset>
+            <input type="radio" name="possible-solution" id="input-a" />
+            <label for="a">&lt;p></label>
+          </fieldset>
+          <fieldset>
+            <input type="radio" name="possible-solution" id="input-b" />
+            <label for="b">&lt;div</label>
+          </fieldset>
+          <fieldset>
+            <input type="radio" name="possible-solution" id="input-c" />
+            <label for="c">&lt;span></label>
+          </fieldset>
+          <fieldset>
+            <input type="radio" name="possible-solution" id="input-d" />
+            <label for="d">&lt;a</label>
+          </fieldset>
+          <div>
+            <button>Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
     <script src="js/app.js"></script>
   </body>
 </html>
