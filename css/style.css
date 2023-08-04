@@ -173,3 +173,7 @@ button:hover {
   background-color: var(--delft-blue);
   color: var(--cambridge-blue);
 }
+
+.tip-ul {
+  display: none;
+}
