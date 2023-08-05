@@ -155,10 +155,10 @@ function QuizQuestion(
   correctAnswer,
   successMessage
 ) {
-  this.question = question; // string
-  this.possibleAnswers = possibleAnswers; // object
-  this.correctAnswer = correctAnswer; // string A, B, C, or D
-  this.successMessage = successMessage; // string
+  this.question = question;
+  this.possibleAnswers = possibleAnswers;
+  this.correctAnswer = correctAnswer;
+  this.successMessage = successMessage;
   this.userAnswer = "";
 }
 /** QuizQuestion prototype to quiz the user with prompts and
@@ -171,33 +171,33 @@ QuizQuestion.prototype.askQuestion = function () {
     modal.hide();
   }
 };
+
 // Constructor for trophies object
 function Trophies() {
-  this.levelElements = document.querySelectorAll(".level-status-div");
+  this.trophyElements = document.querySelectorAll(".level-status-div");
 }
 Trophies.prototype.render = function () {
   for (let i = 0; i < state.game.currentLevel - 1 && i < 4; i++) {
-    this.levelElements[i].querySelector("span").onclick = null;
-    this.levelElements[i].querySelector("span").textContent = "🏆";
-    this.levelElements[i].querySelector("p").textContent = "";
+    this.trophyElements[i].querySelector("span").onclick = null;
+    this.trophyElements[i].querySelector("span").textContent = "🏆";
+    this.trophyElements[i].querySelector("p").textContent = "";
   }
 };
 Trophies.prototype.reset = function () {
-  for (let i = 0; i < this.levelElements.length; i++) {
-    this.levelElements[i].textContent = "❓";
+  for (let i = 0; i < this.trophyElements.length; i++) {
+    this.trophyElements[i].textContent = "❓";
   }
 };
 
 // Constructor for tips object
 function Tips() {
-  this.tipsContainer = document.getElementById("tips-container");
   this.showTipsBtn = document.getElementById("show-tips-btn");
-  this.zeroLevelTip = document.getElementById("zero-level-tip");
-  this.tipElements = document.querySelectorAll(".tip-ul");
+  this.zeroLevelTipElement = document.getElementById("zero-level-tip");
+  this.tipElements = document.querySelectorAll(".tip-div");
 }
 Tips.prototype.render = function () {
   if (state.game.currentLevel > 1) {
-    this.zeroLevelTip.style.display = "none";
+    this.zeroLevelTipElement.style.display = "none";
     for (let i = 0; i < state.game.currentLevel - 1 && i < 3; i++) {
       this.tipElements[i].style.display = "block";
     }
@@ -209,7 +209,7 @@ Tips.prototype.renderAll = function () {
   }
 };
 Tips.prototype.reset = function () {
-  this.zeroLevelTip.style.display = "block";
+  this.zeroLevelTipElement.style.display = "block";
   for (let i = 0; i < 3; i++) {
     this.tipElements[i].style.display = "none";
   }
@@ -220,7 +220,7 @@ function Modal(quizQuestion) {
   let self = this;
   this.quizQuestion = quizQuestion;
   this.modalElement = document.getElementById("modal");
-  this.modalQuestion = document.getElementById("modal-question");
+  this.modalQuestionElement = document.getElementById("modal-question");
   this.form = this.modalElement.querySelector("form");
   this.inputElements = self.form.querySelectorAll("input");
   this.labelElements = self.form.querySelectorAll("label");
@@ -240,7 +240,7 @@ function Modal(quizQuestion) {
 Modal.prototype.render = function () {
   this.modalElement.classList.remove("shake");
   this.modalElement.style.display = "block";
-  this.modalQuestion.textContent = this.quizQuestion.question;
+  this.modalQuestionElement.textContent = this.quizQuestion.question;
   let answerVals = Object.values(this.quizQuestion.possibleAnswers);
   this.form.style.display = "block";
   for (let i = 0; i < answerVals.length; i++) {
@@ -268,7 +268,7 @@ Modal.prototype.sendAnswer = function () {
     selectedValue ===
     this.quizQuestion.possibleAnswers[this.quizQuestion.correctAnswer]
   ) {
-    this.modalQuestion.textContent = this.quizQuestion.successMessage;
+    this.modalQuestionElement.textContent = this.quizQuestion.successMessage;
     this.form.style.display = "none";
     this.nextButton.style.display = "block";
 
@@ -297,12 +297,13 @@ Modal.prototype.renderSuccess = function () {
   let self = this;
   this.modalElement.classList.remove("shake");
   void this.modalElement.offsetWidth;
-  this.modalQuestion.textContent = self.quizQuestion.successMessage;
+  this.modalQuestionElement.textContent = self.quizQuestion.successMessage;
   console.log(this.nextButton);
   this.nextButton.removeEventListener("click", handleRenderSuccess);
   this.nextButton.addEventListener("click", this.hide());
 };
 
+// constructor for user
 function User() {
   this.username = localStorage.getItem("username") || "null";
   this.greetingElem = document.getElementById("user-greeting");
@@ -348,7 +349,7 @@ handleOnPageLoad();
 
 /**
  *  click event on start button, next button, and ❓ buttons
- * @param {event} event
+ * @param {event} event click event
  */
 function handleStartQuest(event) {
   event.preventDefault();
@@ -357,7 +358,7 @@ function handleStartQuest(event) {
 }
 
 /**
- * @param {event} event submit event for quiz form in modal
+ * @param {event} event submit event
  * @param {Modal} modal a modal object
  */
 function handleFormSubmit(event, modal) {
@@ -368,6 +369,10 @@ function handleRenderSuccess(event, modal) {
   event.preventDefault();
   console.log(modal);
   modal.renderSuccess();
+}
+function handleHideModal(event, modal) {
+  event.preventDefault();
+  modal.hide();
 }
 
 // click event handler so the user can bypass the game and just see the tips
@@ -383,7 +388,3 @@ function handleGetUsername(event) {
   state.user.render();
 }
 
-function handleHideModal(event, modal) {
-  event.preventDefault();
-  modal.hide();
-}
