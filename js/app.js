@@ -1,74 +1,20 @@
 "use strict";
 
 // *********************** GLOBAL STATE ***********************
-// This is lengthy, due to the quiz questions being stored here
 let state = {
-  username: getUsername(),
-
-  game: new Game(),
-  // userScore: 0,
-  // currentLevel: 1,
-  // startButton: document.getElementById("start-button"),
-
-  // levelElements: document.querySelectorAll(".level-status-div"),
-
-  tipsContainer: document.getElementById("tips-container"),
-  showTipsBtn: document.getElementById("show-tips-btn"),
-  zeroLevelTip: document.getElementById("zero-level-tip"),
-  tipElements: document.querySelectorAll(".tip-ul"),
+  username: getUsername(), // TODO: create user object
+  game: new Game(), // uses QuizQuestion, Trophies, Tips objects
 };
 
 // *********************** CONSTRUCTOR ***********************
-// Constructor for a quiz question object
-function QuizQuestion(
-  question,
-  possibleAnswers,
-  correctAnswer,
-  successMessage
-) {
-  this.question = question; // string
-  this.possibleAnswers = possibleAnswers; // object
-  this.correctAnswer = correctAnswer; // object[A, B, C, or D]
-  this.successMessage = successMessage; // string
-}
 
-// QuizQuestion prototype to quiz the user with prompts and
-// alerts and update scores to local storage
-QuizQuestion.prototype.askQuestion = function () {
-  let userAnswer;
-  while (userAnswer !== this.correctAnswer) {
-    userAnswer = prompt(this.question);
-
-    if (userAnswer !== null) {
-      userAnswer = userAnswer.toLowerCase();
-    } else {
-      break;
-    }
-
-    if (userAnswer === this.correctAnswer) {
-      alert(this.successMessage);
-      state.userScore += 1;
-      setLocalStorageUserScore();
-      if (state.userScore % 3 === 0) {
-        state.currentLevel += 1;
-        setTips();
-        setLocalStorageUserScore();
-      }
-      if (state.userScore === 9) {
-        showRestartQuestButton();
-      }
-      state.trophies.setTrophies();
-    } else {
-      alert("Incorrect! Please enter one of the letter options, a, b, c, or d");
-    }
-  }
-};
-
+// Constructor for a main game object
 function Game() {
   this.userScore = 0;
   this.currentLevel = 1;
   this.startButton = document.getElementById("start-button");
   this.trophies = new Trophies();
+  this.tips = new Tips();
   this.quizQuestions = [
     new QuizQuestion(
       "Question 1: What is the correct HTML tag for creating a paragraph?",
@@ -128,6 +74,12 @@ function Game() {
     ),
     new QuizQuestion(
       `Question 6: What does CSS stand for?`,
+      {
+        A: "Cascading Style Sheet",
+        B: "Computer Style Sheet",
+        C: "Creative Style Sheet",
+        D: "Colorful Style Sheet",
+      },
       "A",
       "Correct. CSS stands for Cascading Style Sheet."
     ),
@@ -170,121 +122,214 @@ Game.prototype.getScore = function () {
   this.userScore = parseInt(localStorage.getItem("userScore")) || 0;
   this.currentLevel = parseInt(localStorage.getItem("currentLevel")) || 1;
 };
+Game.prototype.setScore = function () {
+  localStorage.setItem("userScore", this.userScore.toString());
+  localStorage.setItem("currentLevel", this.currentLevel.toString());
+};
+Game.prototype.renderRestartQuestButton = function () {
+  this.startButton.textContent = "RESTART QUEST";
+
+  this.startButton.onclick = function (event) {
+    this.currentLevel = 1;
+    this.userScore = 0;
+    state.game.setScore();
+    this.tips.reset();
+    this.trophies.reset();
+    event.target.textContent = "START QUEST";
+    event.target.onclick = handleStartQuest;
+  };
+};
+
+/**
+ * Constructor for a quiz question object
+ * @param  {string} question string of a quiz question
+ * @param  {string} possibleAnswers object with 4 properties containing answers for the user to choose from
+ * @param {string} correctAnswer the correct answer key for this.possibleAnswers object
+ * @param {string} successMessage a message that is displayed if user answers correctly
+ */
+function QuizQuestion(
+  question,
+  possibleAnswers,
+  correctAnswer,
+  successMessage
+) {
+  this.question = question; // string
+  this.possibleAnswers = possibleAnswers; // object
+  this.correctAnswer = correctAnswer; // string A, B, C, or D
+  this.successMessage = successMessage; // string
+  this.userAnswer = "";
+}
+/** QuizQuestion prototype to quiz the user with prompts and
+ alerts and update scores to local storage **/
+QuizQuestion.prototype.askQuestion = function () {
+  let modal = new Modal(this);
+  if (state.game.userScore < 8) {
+    modal.render();
+  } else {
+    modal.hide();
+  }
+};
 
 function Trophies() {
   this.levelElements = document.querySelectorAll(".level-status-div");
 }
-Trophies.prototype.setTrophies = function setTrophies() {
+Trophies.prototype.render = function () {
   for (let i = 0; i < state.game.currentLevel - 1 && i < 4; i++) {
     this.levelElements[i].querySelector("span").onclick = null;
     this.levelElements[i].querySelector("span").textContent = "🏆";
     this.levelElements[i].querySelector("p").textContent = "";
   }
 };
-Trophies.prototype.resetTrophies = function () {
+Trophies.prototype.reset = function () {
   for (let i = 0; i < this.levelElements.length; i++) {
-    state.levelElements[i].textContent = "❓";
+    state.game.levelElements[i].textContent = "❓";
   }
 };
 
-// *********************** DOM MANIPULATION ***********************
-// If the current level is greater than 1, render current tips on screen,
-// else reset the tips to initial state
-function setTips() {
-  if (state.currentLevel > 1) {
-    state.zeroLevelTip.style.display = "none";
-    for (let i = 0; i < state.currentLevel - 1 && i < 3; i++) {
-      state.tipElements[i].style.display = "block";
+function Tips() {
+  this.tipsContainer = document.getElementById("tips-container");
+  this.showTipsBtn = document.getElementById("show-tips-btn");
+  this.zeroLevelTip = document.getElementById("zero-level-tip");
+  this.tipElements = document.querySelectorAll(".tip-ul");
+}
+Tips.prototype.render = function () {
+  if (state.game.currentLevel > 1) {
+    this.zeroLevelTip.style.display = "none";
+    for (let i = 0; i < state.game.currentLevel - 1 && i < 3; i++) {
+      this.tipElements[i].style.display = "block";
+    }
+  }
+};
+Tips.prototype.renderAll = function () {
+  for (let i = 0; i < 3; i++) {
+    this.tipElements[i].style.display = "block";
+  }
+};
+Tips.prototype.reset = function () {
+  this.zeroLevelTip.style.display = "block";
+  for (let i = 0; i < 3; i++) {
+    this.tipElements[i].style.display = "none";
+  }
+};
+
+function Modal(quizQuestion) {
+  let self = this;
+  this.quizQuestion = quizQuestion;
+  this.modalElement = document.getElementById("modal");
+  this.modalQuestion = document.getElementById("modal-question");
+  this.submitButton = document.getElementById("submit-btn");
+  this.cancelButton = document.getElementById("cancel-btn");
+  this.form = this.modalElement.querySelector("form");
+  this.inputElements = this.form.querySelectorAll("input");
+  this.labelElements = this.form.querySelectorAll("label");
+  this.cancelButton.addEventListener("click", function (event) {
+    handleHideModal(event, self);
+  });
+  this.form.addEventListener("submit", function (event) {
+    handleFormSubmit(event, self);
+  });
+  this.nextButton = document.getElementById("next-btn");
+  this.nextButton.addEventListener("click", handleStartQuest);
+}
+Modal.prototype.render = function () {
+  // TODO: add incorrect message if wrong
+  // TODO: hide next button until after submit
+  this.modalElement.style.display = "block";
+  this.modalQuestion.textContent = this.quizQuestion.question;
+  let answerVals = Object.values(this.quizQuestion.possibleAnswers);
+  this.form.style.display = "block";
+  for (let i = 0; i < answerVals.length; i++) {
+    this.inputElements[i].value = answerVals[i];
+    this.labelElements[i].textContent = answerVals[i];
+  }
+  console.log(this.inputElements);
+};
+Modal.prototype.hide = function () {
+  this.modalElement.style.display = "none";
+};
+Modal.prototype.sendAnswer = function () {
+  const selectedValue = document.querySelector(
+    "input[name='possible-solution']:checked"
+  ).value;
+  console.log(selectedValue);
+
+  state.currentAnswer = selectedValue;
+  if (
+    selectedValue ===
+    this.quizQuestion.possibleAnswers[this.quizQuestion.correctAnswer]
+  ) {
+    // modal = new Modal(this.successMessage);
+    this.modalQuestion.textContent = this.quizQuestion.successMessage;
+    this.form.style.display = "none";
+    // this.render();
+    // alert(this.successMessage);
+    state.game.userScore += 1;
+    state.game.setScore();
+    if (state.game.userScore % 3 === 0) {
+      state.game.currentLevel += 1;
+      state.game.setScore();
+      state.game.tips.render();
+      state.game.trophies.render();
+      // TODO: Hide next button
+      // TODO: change next button text to see current tips! / quest complete
+    }
+
+    if (state.game.userScore === 9) {
+      state.game.renderRestartQuestButton();
     }
   } else {
-    resetTips();
+    // TODO: shake screen if incorrect
+    // alert("Incorrect! Please enter one of the letter options, a, b, c, or d");
   }
-}
-
-// helper function to reset tips to initial app state
-function resetTips() {
-  state.zeroLevelTip.style.display = "block";
-  for (let i = 0; i < 3; i++) {
-    state.tipElements[i].style.display = "none";
-  }
-}
-
-// helper function to render the 🏆 on the screen for each level that's complete
-// function setTrophies() {
-//   for (let i = 0; i < state.currentLevel - 1 && i < 4; i++) {
-//     state.levelElements[i].querySelector("span").textContent = "🏆";
-//     state.levelElements[i].querySelector("span").onclick = null;
-//     state.levelElements[i].querySelector("p").textContent = "";
-//   }
-// }
-
-// helper function to reset trophies to initial app state
-// function resetTrophies() {
-//   for (let i = 0; i < state.levelElements.length; i++) {
-//     state.levelElements[i].textContent = "❓";
-//   }
-// }
+  return selectedValue;
+};
 
 // *********************** EVENT HANDLING ***********************
 // when the page loads, get the local storage data and update the start button text content
 function handleOnPageLoad() {
   state.game.getScore();
-  getLocalStorage();
-  if (state.currentLevel > 1) {
-    state.startButton.textContent = "CONTINUE QUEST";
-    if (state.userScore === 9) {
-      showRestartQuestButton();
+  if (state.game.currentLevel > 1) {
+    state.game.startButton.textContent = "CONTINUE QUEST";
+    if (state.game.userScore === 9) {
+      state.game.renderRestartQuestButton();
     }
   }
-  // add handleShowAllTips() handler to the show tips button
-  state.showTipsBtn.addEventListener("click", handleShowAllTips);
-
+  // add handleShowAllTips handler to the show tips button
+  state.game.tips.showTipsBtn.addEventListener("click", handleShowAllTips);
+  state.game.tips.render();
+  state.game.trophies.render();
   // set the username element
   document.getElementById("username").textContent = state.username;
 }
 handleOnPageLoad();
 
+/**
+ * @param {event} event submit event for quiz form in modal
+ * @param {Modal} modal a modal object
+ */
+function handleFormSubmit(event, modal) {
+  event.preventDefault();
+  modal.sendAnswer();
+}
+
 // click event handler so the user can bypass the game and just see the tips
 function handleShowAllTips(event) {
   event.preventDefault();
-  state.tipsContainer.innerHTML = "";
-
-  for (let i = 0; i < 3; i++) {
-    let levelHeading = document.createElement("h2");
-    levelHeading.textContent = `Level ${i + 1} tips`;
-    state.tipsContainer.appendChild(levelHeading);
-
-    let tipsUL = document.createElement("ul");
-    tipsUL.innerHTML = state.tipElements[i];
-    state.tipsContainer.appendChild(tipsUL);
-  }
+  state.game.tips.renderAll();
 }
 
 // click event on start button. loops through 3 quiz question objects and
 // calls the askQuestion() prototype function
-function startQuest(event) {
+function handleStartQuest(event) {
   event.preventDefault();
-  document.getElementById("start-button").textContent = "CONTINUE QUEST";
+  state.game.startButton.textContent = "CONTINUE QUEST";
 
-  for (let i = 0; i < 3; i++) {
-    state.quizQuestions[state.userScore].askQuestion();
-  }
+  state.game.quizQuestions[state.game.userScore].askQuestion();
 }
 
-// updates the start button text and changes the onclick handler to reset everything
-// to the initial app state except the username
-function showRestartQuestButton() {
-  state.startButton.textContent = "RESTART QUEST";
-
-  state.startButton.onclick = function (event) {
-    state.currentLevel = 1;
-    state.userScore = 0;
-    setLocalStorageUserScore();
-    resetTips();
-    state.trophies.resetTrophies();
-    event.target.textContent = "START QUEST";
-    event.target.onclick = startQuest;
-  };
+function handleHideModal(event, modal) {
+  event.preventDefault();
+  modal.hide();
 }
 
 // *********************** LOCAL STORAGE ***********************
@@ -298,20 +343,6 @@ function getUsername() {
   } else return localStorageUsername;
 }
 
-function setLocalStorageUserScore() {
-  localStorage.setItem("userScore", state.userScore.toString());
-  localStorage.setItem("currentLevel", state.currentLevel.toString());
-}
-
 function setLocalStorageUsername(username) {
   localStorage.setItem("username", username);
-}
-
-// gets the local storage and updates the tips and trophies
-function getLocalStorage() {
-  // state.userScore = parseInt(localStorage.getItem("userScore")) || 0;
-  // state.currentLevel = parseInt(localStorage.getItem("currentLevel")) || 1;
-  // state.username = localStorage.getItem("username") || null;
-  setTips();
-  setTrophies();
 }
