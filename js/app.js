@@ -221,8 +221,8 @@ function Modal(quizQuestion) {
   this.modalElement = document.getElementById("modal");
   this.modalQuestion = document.getElementById("modal-question");
   this.form = this.modalElement.querySelector("form");
-  this.inputElements = this.form.querySelectorAll("input");
-  this.labelElements = this.form.querySelectorAll("label");
+  this.inputElements = self.form.querySelectorAll("input");
+  this.labelElements = self.form.querySelectorAll("label");
   this.submitButton = document.getElementById("submit-btn");
   this.cancelButtons = document.getElementsByClassName("close");
   for (let cancelButton of this.cancelButtons) {
@@ -237,6 +237,7 @@ function Modal(quizQuestion) {
   this.nextButton.addEventListener("click", handleStartQuest);
 }
 Modal.prototype.render = function () {
+  this.modalElement.classList.remove("shake");
   this.modalElement.style.display = "block";
   this.modalQuestion.textContent = this.quizQuestion.question;
   let answerVals = Object.values(this.quizQuestion.possibleAnswers);
@@ -253,10 +254,13 @@ Modal.prototype.hide = function () {
 };
 Modal.prototype.sendAnswer = function () {
   let self = this;
+
+  this.modalElement.classList.remove("shake");
+  void this.modalElement.offsetWidth;
+
   const selectedValue = document.querySelector(
     "input[name='possible-solution']:checked"
   ).value;
-  console.log(selectedValue);
 
   state.currentAnswer = selectedValue;
   if (
@@ -285,11 +289,13 @@ Modal.prototype.sendAnswer = function () {
       state.game.renderRestartQuestButton();
     }
   } else {
-    // TODO: shake screen if incorrect
+    this.modalElement.classList.add("shake");
   }
 };
 Modal.prototype.renderSuccess = function () {
   let self = this;
+  this.modalElement.classList.remove("shake");
+  void this.modalElement.offsetWidth;
   this.modalQuestion.textContent = self.quizQuestion.successMessage;
   console.log(this.nextButton);
   this.nextButton.removeEventListener("click", handleRenderSuccess);
