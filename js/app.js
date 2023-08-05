@@ -137,7 +137,9 @@ Game.prototype.renderRestartQuestButton = function () {
     self.tips.reset();
     self.trophies.reset();
     event.target.textContent = "START QUEST";
-    event.target.onclick = function(event){handleStartQuest(event);};
+    event.target.onclick = function (event) {
+      handleStartQuest(event);
+    };
   };
 };
 
@@ -218,14 +220,16 @@ function Modal(quizQuestion) {
   this.quizQuestion = quizQuestion;
   this.modalElement = document.getElementById("modal");
   this.modalQuestion = document.getElementById("modal-question");
-  this.submitButton = document.getElementById("submit-btn");
-  this.cancelButton = document.getElementById("cancel-btn");
   this.form = this.modalElement.querySelector("form");
   this.inputElements = this.form.querySelectorAll("input");
   this.labelElements = this.form.querySelectorAll("label");
-  this.cancelButton.addEventListener("click", function (event) {
-    handleHideModal(event, self);
-  });
+  this.submitButton = document.getElementById("submit-btn");
+  this.cancelButtons = document.getElementsByClassName("close");
+  for (let cancelButton of this.cancelButtons) {
+    cancelButton.addEventListener("click", function (event) {
+      handleHideModal(event, self);
+    });
+  }
   this.form.addEventListener("submit", function (event) {
     handleFormSubmit(event, self);
   });
@@ -243,7 +247,6 @@ Modal.prototype.render = function () {
   }
   this.nextButton.style.display = "none";
   this.nextButton.textContent = "Next";
-
 };
 Modal.prototype.hide = function () {
   this.modalElement.style.display = "none";
