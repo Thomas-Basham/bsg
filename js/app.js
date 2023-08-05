@@ -6,8 +6,7 @@ let state = {
   game: new Game(), // uses QuizQuestion, Trophies, Tips objects
 };
 
-// *********************** CONSTRUCTOR ***********************
-
+// *********************** CONSTRUCTORS ***********************
 // Constructor for a main game object
 function Game() {
   this.userScore = 0;
@@ -172,7 +171,7 @@ QuizQuestion.prototype.askQuestion = function () {
     modal.hide();
   }
 };
-
+// Constructor for trophies object
 function Trophies() {
   this.levelElements = document.querySelectorAll(".level-status-div");
 }
@@ -189,6 +188,7 @@ Trophies.prototype.reset = function () {
   }
 };
 
+// Constructor for tips object
 function Tips() {
   this.tipsContainer = document.getElementById("tips-container");
   this.showTipsBtn = document.getElementById("show-tips-btn");
@@ -215,6 +215,7 @@ Tips.prototype.reset = function () {
   }
 };
 
+// Constructor for modal object
 function Modal(quizQuestion) {
   let self = this;
   this.quizQuestion = quizQuestion;
@@ -301,11 +302,7 @@ Modal.prototype.renderSuccess = function () {
   this.nextButton.removeEventListener("click", handleRenderSuccess);
   this.nextButton.addEventListener("click", this.hide());
 };
-function handleRenderSuccess(event, modal) {
-  event.preventDefault();
-  console.log(modal);
-  modal.renderSuccess();
-}
+
 function User() {
   this.username = localStorage.getItem("username") || "null";
   this.greetingElem = document.getElementById("user-greeting");
@@ -350,6 +347,16 @@ function handleOnPageLoad() {
 handleOnPageLoad();
 
 /**
+ *  click event on start button, next button, and ❓ buttons
+ * @param {event} event
+ */
+function handleStartQuest(event) {
+  event.preventDefault();
+  state.game.startButton.textContent = "CONTINUE QUEST";
+  state.game.quizQuestions[state.game.userScore].askQuestion();
+}
+
+/**
  * @param {event} event submit event for quiz form in modal
  * @param {Modal} modal a modal object
  */
@@ -357,14 +364,10 @@ function handleFormSubmit(event, modal) {
   event.preventDefault();
   modal.sendAnswer();
 }
-
-// click event on start button. loops through 3 quiz question objects and
-// calls the askQuestion() prototype function
-function handleStartQuest(event) {
+function handleRenderSuccess(event, modal) {
   event.preventDefault();
-  state.game.startButton.textContent = "CONTINUE QUEST";
-
-  state.game.quizQuestions[state.game.userScore].askQuestion();
+  console.log(modal);
+  modal.renderSuccess();
 }
 
 // click event handler so the user can bypass the game and just see the tips
