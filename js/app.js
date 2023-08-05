@@ -2,7 +2,7 @@
 
 // *********************** GLOBAL STATE ***********************
 let state = {
-  username: getUsername(), // TODO: create user object
+  user: new User(),
   game: new Game(), // uses QuizQuestion, Trophies, Tips objects
 };
 
@@ -19,10 +19,10 @@ function Game() {
     new QuizQuestion(
       "Question 1: What is the correct HTML tag for creating a paragraph?",
       {
-        A: "&lt;p>",
-        B: "&lt;div>",
-        C: "&lt;span>",
-        D: "&lt;a>",
+        A: "<p>",
+        B: "<div>",
+        C: "<span>",
+        D: "<a>",
       },
       "A",
       "That's correct! <p> is the proper HTML tag to create a paragraph."
@@ -242,7 +242,6 @@ Modal.prototype.render = function () {
     this.inputElements[i].value = answerVals[i];
     this.labelElements[i].textContent = answerVals[i];
   }
-  console.log(this.inputElements);
 };
 Modal.prototype.hide = function () {
   this.modalElement.style.display = "none";
@@ -258,10 +257,8 @@ Modal.prototype.sendAnswer = function () {
     selectedValue ===
     this.quizQuestion.possibleAnswers[this.quizQuestion.correctAnswer]
   ) {
-    // modal = new Modal(this.successMessage);
     this.modalQuestion.textContent = this.quizQuestion.successMessage;
     this.form.style.display = "none";
-    // this.render();
     // alert(this.successMessage);
     state.game.userScore += 1;
     state.game.setScore();
@@ -284,13 +281,38 @@ Modal.prototype.sendAnswer = function () {
   return selectedValue;
 };
 
+function User() {
+  this.username = localStorage.getItem("username") || "null";
+  this.greetingElem = document.getElementById("user-greeting");
+  this.usernameElem = document.getElementById("username");
+  this.formElem = document.getElementById("username-form");
+  this.formElem.addEventListener("submit", handleGetUsername);
+}
+User.prototype.getUsername = function () {
+  if (this.username === null || this.username === "") {
+    this.setUsername(this.username);
+  }
+};
+User.prototype.setUsername = function () {
+  localStorage.setItem("username", this.username);
+};
+User.prototype.render = function () {
+  if (this.username === "null" || this.username === "") {
+    this.greetingElem.style.display = "none";
+  } else {
+    this.usernameElem.textContent = this.username;
+    this.greetingElem.style.display = "block";
+    this.formElem.style.display = "none";
+  }
+};
+
 // *********************** EVENT HANDLING ***********************
 // when the page loads, get the local storage data and update the start button text content
 function handleOnPageLoad() {
   state.game.getScore();
   if (state.game.currentLevel > 1) {
     state.game.startButton.textContent = "CONTINUE QUEST";
-    if (state.game.userScore === 9) {
+    if (state.game.userScore === state.game.quizQuestions.length) {
       state.game.renderRestartQuestButton();
     }
   }
@@ -298,8 +320,7 @@ function handleOnPageLoad() {
   state.game.tips.showTipsBtn.addEventListener("click", handleShowAllTips);
   state.game.tips.render();
   state.game.trophies.render();
-  // set the username element
-  document.getElementById("username").textContent = state.username;
+  state.user.render();
 }
 handleOnPageLoad();
 
@@ -312,12 +333,6 @@ function handleFormSubmit(event, modal) {
   modal.sendAnswer();
 }
 
-// click event handler so the user can bypass the game and just see the tips
-function handleShowAllTips(event) {
-  event.preventDefault();
-  state.game.tips.renderAll();
-}
-
 // click event on start button. loops through 3 quiz question objects and
 // calls the askQuestion() prototype function
 function handleStartQuest(event) {
@@ -327,22 +342,20 @@ function handleStartQuest(event) {
   state.game.quizQuestions[state.game.userScore].askQuestion();
 }
 
+// click event handler so the user can bypass the game and just see the tips
+function handleShowAllTips(event) {
+  event.preventDefault();
+  state.game.tips.renderAll();
+}
+
+function handleGetUsername(event) {
+  event.preventDefault();
+  state.user.username = event.target.username.value;
+  state.user.setUsername();
+  state.user.render();
+}
+
 function handleHideModal(event, modal) {
   event.preventDefault();
   modal.hide();
-}
-
-// *********************** LOCAL STORAGE ***********************
-// check local storage for username. if not there, prompt user for name
-function getUsername() {
-  let localStorageUsername = localStorage.getItem("username");
-  if (localStorageUsername === null || localStorageUsername === "") {
-    let username = prompt("Greetings! What is your name?");
-    setLocalStorageUsername(username);
-    return username;
-  } else return localStorageUsername;
-}
-
-function setLocalStorageUsername(username) {
-  localStorage.setItem("username", username);
 }
