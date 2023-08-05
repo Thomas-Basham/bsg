@@ -13,6 +13,7 @@ The Boot Camp Survival Guide is an interactive web application designed to help 
 - [DOM Manipulation](https://www.w3schools.com/js/js_htmldom_elements.asp)
 - [OpenAI GPT-3](https://openai.com/)
 - [Prompt for getting quiz Questions](https://chat.openai.com/share/ac6d1181-f867-4a34-8b19-a29f9cd14102)
+- [Modal Styling](https://www.w3schools.com/howto/howto_css_modals.asp)
 
 ![Wire-frame](img/wire-frame.png)
 
