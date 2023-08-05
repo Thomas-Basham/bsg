@@ -127,16 +127,17 @@ Game.prototype.setScore = function () {
   localStorage.setItem("currentLevel", this.currentLevel.toString());
 };
 Game.prototype.renderRestartQuestButton = function () {
+  let self = this;
   this.startButton.textContent = "RESTART QUEST";
 
   this.startButton.onclick = function (event) {
-    this.currentLevel = 1;
-    this.userScore = 0;
-    state.game.setScore();
-    this.tips.reset();
-    this.trophies.reset();
+    self.currentLevel = 1;
+    self.userScore = 0;
+    self.setScore();
+    self.tips.reset();
+    self.trophies.reset();
     event.target.textContent = "START QUEST";
-    event.target.onclick = handleStartQuest;
+    event.target.onclick = function(event){handleStartQuest(event);};
   };
 };
 
@@ -163,7 +164,7 @@ function QuizQuestion(
  alerts and update scores to local storage **/
 QuizQuestion.prototype.askQuestion = function () {
   let modal = new Modal(this);
-  if (state.game.userScore < 8) {
+  if (state.game.userScore < 9) {
     modal.render();
   } else {
     modal.hide();
@@ -182,7 +183,7 @@ Trophies.prototype.render = function () {
 };
 Trophies.prototype.reset = function () {
   for (let i = 0; i < this.levelElements.length; i++) {
-    state.game.levelElements[i].textContent = "❓";
+    this.levelElements[i].textContent = "❓";
   }
 };
 
@@ -232,8 +233,6 @@ function Modal(quizQuestion) {
   this.nextButton.addEventListener("click", handleStartQuest);
 }
 Modal.prototype.render = function () {
-  // TODO: add incorrect message if wrong
-  // TODO: hide next button until after submit
   this.modalElement.style.display = "block";
   this.modalQuestion.textContent = this.quizQuestion.question;
   let answerVals = Object.values(this.quizQuestion.possibleAnswers);
@@ -242,11 +241,15 @@ Modal.prototype.render = function () {
     this.inputElements[i].value = answerVals[i];
     this.labelElements[i].textContent = answerVals[i];
   }
+  this.nextButton.style.display = "none";
+  this.nextButton.textContent = "Next";
+
 };
 Modal.prototype.hide = function () {
   this.modalElement.style.display = "none";
 };
 Modal.prototype.sendAnswer = function () {
+  let self = this;
   const selectedValue = document.querySelector(
     "input[name='possible-solution']:checked"
   ).value;
@@ -259,7 +262,8 @@ Modal.prototype.sendAnswer = function () {
   ) {
     this.modalQuestion.textContent = this.quizQuestion.successMessage;
     this.form.style.display = "none";
-    // alert(this.successMessage);
+    this.nextButton.style.display = "block";
+
     state.game.userScore += 1;
     state.game.setScore();
     if (state.game.userScore % 3 === 0) {
@@ -267,8 +271,11 @@ Modal.prototype.sendAnswer = function () {
       state.game.setScore();
       state.game.tips.render();
       state.game.trophies.render();
-      // TODO: Hide next button
-      // TODO: change next button text to see current tips! / quest complete
+      this.nextButton.removeEventListener("click", handleStartQuest);
+      this.nextButton.addEventListener("click", function (event) {
+        handleRenderSuccess(event, self);
+      });
+      this.nextButton.textContent = "See the newly unlocked tips";
     }
 
     if (state.game.userScore === 9) {
@@ -276,11 +283,20 @@ Modal.prototype.sendAnswer = function () {
     }
   } else {
     // TODO: shake screen if incorrect
-    // alert("Incorrect! Please enter one of the letter options, a, b, c, or d");
   }
-  return selectedValue;
 };
-
+Modal.prototype.renderSuccess = function () {
+  let self = this;
+  this.modalQuestion.textContent = self.quizQuestion.successMessage;
+  console.log(this.nextButton);
+  this.nextButton.removeEventListener("click", handleRenderSuccess);
+  this.nextButton.addEventListener("click", this.hide());
+};
+function handleRenderSuccess(event, modal) {
+  event.preventDefault();
+  console.log(modal);
+  modal.renderSuccess();
+}
 function User() {
   this.username = localStorage.getItem("username") || "null";
   this.greetingElem = document.getElementById("user-greeting");
