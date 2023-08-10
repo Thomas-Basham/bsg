@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Boot Camp Survival Guide</title>
+    <title>Bootcamp Survival Guide</title>
     <meta
       name="description"
-      content="The Boot Camp Survival Guide is an
+      content="The Bootcamp Survival Guide is an
     interactive web application designed to help new devs navigate and succeed
     in coding bootcamps. Users can start a quest where they go through a
     serious of quiz question that unlock helpful tips to support learners
@@ -17,10 +17,14 @@
   <body>
     <header>
       <section class="container flex-between padding-block-1">
-        <h1>Boot Camp Survival Guide</h1>
+        <h1>Bootcamp Survival Guide</h1>
         <form id="username-form">
-          <label for="username">Username</label>
-          <input type="text" name="username" id="username-input" />
+          <input
+            type="text"
+            name="username"
+            placeholder="Username"
+            id="username-input"
+          />
           <button type="submit">Submit</button>
         </form>
         <p id="user-greeting">Hello, <span id="username"></span></p>
@@ -28,7 +32,6 @@
       <nav>
         <a href="index.html">Home</a>
         <a href="about.html">About This Website</a>
-        <a href="about.html">Another Link</a>
       </nav>
     </header>
     <main>
@@ -36,7 +39,7 @@
         <div class="container flex-between">
           <image alt="fun image" src="img/stock-laptop.jpg" />
           <div class="padding-1">
-            <h2>Boot Camp Survival Guide</h2>
+            <h2>Bootcamp Survival Guide</h2>
             <h3 class="margin-block-1">Empowering new developers</h3>
             <div class="flex-between">
               <button
@@ -182,7 +185,7 @@
     <div id="modal">
       <div class="modal-content">
         <span class="close">&times;</span>
-        <p id="modal-question">
+        <p id="modal-header">
           Question 1: What is the correct HTML tag for creating a paragraph?
         </p>
         <form>
