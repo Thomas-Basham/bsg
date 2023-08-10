@@ -1,13 +1,12 @@
-# Boot Camp Survival Guide
+# Bootcamp Survival Guide
 
-The Boot Camp Survival Guide is an interactive web application designed to help new devs navigate and succeed in coding bootcamps. Users can start a "quest" where they go through a serious of quiz question that unlock helpful tips to support learners throughout their bootcamp journey.
+The Bootcamp Survival Guide is an interactive web application designed to help new devs navigate and succeed in coding bootcamps. Users can start a "quest" where they go through a serious of quiz question that unlock helpful tips to support learners throughout their bootcamp journey.
 
 ## Author: Thomas Basham
 
-### [Review Pull Request](https://github.com/Thomas-Basham/code-201-project/pull/6)
-
 ### Links and Resources
 
+- [Review PR](https://github.com/Thomas-Basham/code-201-project/pull/6)
 - [JavaScript Documentation](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 - [Local Storage](https://www.w3schools.com/jsref/prop_win_localstorage.asp)
 - [DOM Manipulation](https://www.w3schools.com/js/js_htmldom_elements.asp)
@@ -15,7 +14,9 @@ The Boot Camp Survival Guide is an interactive web application designed to help 
 - [Prompt for getting quiz Questions](https://chat.openai.com/share/ac6d1181-f867-4a34-8b19-a29f9cd14102)
 - [Modal Styling](https://www.w3schools.com/howto/howto_css_modals.asp)
 
-![Wire-frame](img/wire-frame.png)
+![Wire-frame Updated](img/wire-frame-update.png)
+![Wire-frame about page](img/wire-frame-about.png)
+![Architecture brainstorm](img/architecture-brainstorm.png)
 
 ### Lighthouse Accessibility Report Score
 
