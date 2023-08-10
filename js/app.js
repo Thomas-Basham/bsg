@@ -2,8 +2,8 @@
 
 // *********************** GLOBAL STATE ***********************
 let state = {
-  user: new User(),
   game: new Game(), // uses QuizQuestion, Trophies, Tips objects
+  user: new User(),
 };
 
 // *********************** CONSTRUCTORS ***********************
@@ -220,7 +220,7 @@ function Modal(quizQuestion) {
   let self = this;
   this.quizQuestion = quizQuestion;
   this.modalElement = document.getElementById("modal");
-  this.modalQuestionElement = document.getElementById("modal-question");
+  this.modalHeaderElement = document.getElementById("modal-header");
   this.form = this.modalElement.querySelector("form");
   this.inputElements = self.form.querySelectorAll("input");
   this.labelElements = self.form.querySelectorAll("label");
@@ -240,15 +240,15 @@ function Modal(quizQuestion) {
 Modal.prototype.render = function () {
   this.modalElement.classList.remove("shake");
   this.modalElement.style.display = "block";
-  this.modalQuestionElement.textContent = this.quizQuestion.question;
-  let answerVals = Object.values(this.quizQuestion.possibleAnswers);
+  this.modalHeaderElement.textContent = this.quizQuestion.question;
   this.form.style.display = "block";
+  this.nextButton.style.display = "none";
+  this.nextButton.textContent = "Next";
+  let answerVals = Object.values(this.quizQuestion.possibleAnswers);
   for (let i = 0; i < answerVals.length; i++) {
     this.inputElements[i].value = answerVals[i];
     this.labelElements[i].textContent = answerVals[i];
   }
-  this.nextButton.style.display = "none";
-  this.nextButton.textContent = "Next";
 };
 Modal.prototype.hide = function () {
   this.modalElement.style.display = "none";
@@ -263,12 +263,11 @@ Modal.prototype.sendAnswer = function () {
     "input[name='possible-solution']:checked"
   ).value;
 
-  state.currentAnswer = selectedValue;
   if (
     selectedValue ===
     this.quizQuestion.possibleAnswers[this.quizQuestion.correctAnswer]
   ) {
-    this.modalQuestionElement.textContent = this.quizQuestion.successMessage;
+    this.modalHeaderElement.textContent = this.quizQuestion.successMessage;
     this.form.style.display = "none";
     this.nextButton.style.display = "block";
 
@@ -281,7 +280,7 @@ Modal.prototype.sendAnswer = function () {
       state.game.trophies.render();
       this.nextButton.removeEventListener("click", handleStartQuest);
       this.nextButton.addEventListener("click", function (event) {
-        handleRenderSuccess(event, self);
+        handleRenderSuccessMessage(event, self);
       });
       this.nextButton.textContent = "See the newly unlocked tips";
     }
@@ -293,13 +292,13 @@ Modal.prototype.sendAnswer = function () {
     this.modalElement.classList.add("shake");
   }
 };
-Modal.prototype.renderSuccess = function () {
+Modal.prototype.renderSuccessMessage = function () {
   let self = this;
   this.modalElement.classList.remove("shake");
   void this.modalElement.offsetWidth;
-  this.modalQuestionElement.textContent = self.quizQuestion.successMessage;
+  this.modalHeaderElement.textContent = self.quizQuestion.successMessage;
   console.log(this.nextButton);
-  this.nextButton.removeEventListener("click", handleRenderSuccess);
+  this.nextButton.removeEventListener("click", handleRenderSuccessMessage);
   this.nextButton.addEventListener("click", this.hide());
 };
 
@@ -339,7 +338,6 @@ function handleOnPageLoad() {
       state.game.renderRestartQuestButton();
     }
   }
-  // add handleShowAllTips handler to the show tips button
   state.game.tips.showTipsBtn.addEventListener("click", handleShowAllTips);
   state.game.tips.render();
   state.game.trophies.render();
@@ -358,6 +356,7 @@ function handleStartQuest(event) {
 }
 
 /**
+ * Modal event handling
  * @param {event} event submit event
  * @param {Modal} modal a modal object
  */
@@ -365,26 +364,25 @@ function handleFormSubmit(event, modal) {
   event.preventDefault();
   modal.sendAnswer();
 }
-function handleRenderSuccess(event, modal) {
+function handleRenderSuccessMessage(event, modal) {
   event.preventDefault();
-  console.log(modal);
-  modal.renderSuccess();
+  modal.renderSuccessMessage();
 }
 function handleHideModal(event, modal) {
   event.preventDefault();
   modal.hide();
 }
 
-// click event handler so the user can bypass the game and just see the tips
+// click event handler lets user bypass the game and just see the tips
 function handleShowAllTips(event) {
   event.preventDefault();
   state.game.tips.renderAll();
 }
 
+// submit event on username form
 function handleGetUsername(event) {
   event.preventDefault();
   state.user.username = event.target.username.value;
   state.user.setUsername();
   state.user.render();
 }
-
