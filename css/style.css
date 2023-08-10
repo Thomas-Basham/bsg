@@ -1,0 +1,313 @@
+@import url('https://fonts.googleapis.com/css2?family=Bungee&family=Roboto&display=swap');
+
+@keyframes shake {
+  0% {
+    transform: translate(1px, 1px) rotate(0deg);
+  }
+
+  10% {
+    transform: translate(-1px, -2px) rotate(-1deg);
+  }
+
+  20% {
+    transform: translate(-3px, 0px) rotate(1deg);
+  }
+
+  30% {
+    transform: translate(3px, 2px) rotate(0deg);
+  }
+
+  40% {
+    transform: translate(1px, -1px) rotate(1deg);
+  }
+
+  50% {
+    transform: translate(-1px, 2px) rotate(-1deg);
+  }
+
+  60% {
+    transform: translate(-3px, 1px) rotate(0deg);
+  }
+
+  70% {
+    transform: translate(3px, 1px) rotate(-1deg);
+  }
+
+  80% {
+    transform: translate(-1px, -1px) rotate(1deg);
+  }
+
+  90% {
+    transform: translate(1px, 2px) rotate(0deg);
+  }
+
+  100% {
+    transform: translate(1px, -2px) rotate(-1deg);
+  }
+}
+
+* {
+  --eggshell: #f4f1deff;
+  --burnt-sienna: rgb(165, 71, 46);
+  --delft-blue: rgb(49, 52, 74);
+  --cambridge-blue: #81b29aff;
+  --sunset: #f2cc8fff;
+  font-family: 'Roboto', sans-serif;
+  /* border: 1px solid red; */
+}
+
+body,
+html {
+  background-color: var(--eggshell);
+  margin: 0;
+  height: 100%;
+}
+
+h1 {
+  font-size: 3.7vw;
+  margin: 0;
+  font-family: 'Bungee', cursive;
+}
+
+h2 {
+  font-size: 3vw;
+  margin: 0;
+}
+
+h3 {
+  font-size: 2vw;
+  margin: 0;
+}
+
+h4 {
+  font-size: 1.7vw;
+}
+
+p,
+li,
+button {
+  font-size: 1.3vw;
+}
+
+header {
+  background-color: var(--sunset);
+  padding-inline: 2rem;
+  margin: 2rem;
+  height: fit-content;
+}
+
+header button {
+  padding-block: .4rem;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+main {
+  min-height: 70vh;
+  width: 60%;
+  margin: 0 auto;
+}
+
+footer {
+  text-align: center;
+  padding-bottom: 2rem;
+}
+
+img {
+  width: 50%;
+}
+
+li {
+  padding-bottom: 1rem;
+}
+
+button {
+  padding-inline: 1rem;
+  padding-block: .5rem;
+  border: 1px solid var(--cambridge-blue);
+  border-radius: 5px;
+  background-color: var(--delft-blue);
+  color: var(--cambridge-blue);
+}
+
+button:hover {
+  cursor: pointer;
+  background-color: var(--cambridge-blue);
+  color: var(--delft-blue);
+}
+
+a {
+  text-decoration: none;
+  margin: 1rem;
+  color: var(--delft-blue);
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+nav {
+  padding-inline: 1rem;
+  padding-block: .5rem;
+}
+
+
+#start-section {
+  padding: 2rem;
+  height: fit-content;
+  background-color: var(--delft-blue);
+  color: #f2cc8fff;
+}
+
+#start-section button {
+  margin-inline: 2px;
+}
+
+#tips-section {
+  margin-block: 2rem;
+}
+
+#tips-section div {
+  min-height: 25vh;
+  background-color: var(--burnt-sienna);
+  color: white;
+}
+
+#level-status-section {
+  width: 50%;
+  margin: 20px auto;
+}
+
+#modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+#user-greeting {
+  display: none;
+}
+
+#user-greeting {
+  display: none;
+}
+
+#level-complete-btn {
+  display: none;
+}
+
+.modal-content {
+  background-color: var(--delft-blue);
+  color: var(--sunset);
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid var(--cambridge-blue);
+  width: 40%;
+}
+
+/* The Modal Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.padding-1 {
+  padding: 1rem;
+}
+
+.border-green {
+  border: 2px solid var(--cambridge-blue);
+  border-radius: 3px;
+}
+
+.level-status-div {
+  width: 100%;
+}
+
+.level-status-div span {
+  font-size: 40px;
+  padding: 1rem;
+  cursor: pointer;
+}
+
+.level-status-div span:hover {
+  background-color: var(--cambridge-blue);
+}
+
+.level-status-div p {
+  width: 80%;
+  margin: 0 auto;
+  min-height: 150px;
+}
+
+.level-status-div * {
+  margin-bottom: 1rem;
+}
+
+.margin-block-1 {
+  margin-block: 1rem;
+}
+
+.padding-block-1 {
+  padding-block: 1rem;
+}
+
+.container {
+  margin: 0 auto;
+  /* width: 50%; */
+  height: 100%;
+}
+
+.btn-2 {
+  background-color: var(--cambridge-blue);
+  color: var(--delft-blue);
+}
+
+.btn-2:hover {
+  cursor: pointer;
+  background-color: var(--delft-blue);
+  color: var(--cambridge-blue);
+}
+
+.btn-red {
+  border-color: var(--sunset);
+  color: var(--sunset);
+}
+
+.btn-red:hover {
+  background-color: var(--sunset);
+}
+
+.tip-div {
+  display: none;
+}
+
+.mt-1 {
+  margin-top: 1rem;
+}
+
+.shake {
+  animation: shake 0.5s;
+}
